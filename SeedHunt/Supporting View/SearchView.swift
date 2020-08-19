@@ -28,6 +28,16 @@ struct SearchView: View {
           self.searchLocView(for: result)
         }
       }
+      
+      Text("Popular")
+      List {
+        ForEach(LocationHelper.popularLocations, id: \.name) { loc in
+          self.popularLocView(for: loc)
+        }
+      }
+    }
+    .onAppear {
+      LocationHelper.shared.authorize()
     }
   }
   
@@ -37,7 +47,7 @@ struct SearchView: View {
         LocationHelper.shared.userLocation { userLocation in
           self.select(userLocation)
         }
-    }
+      }
   }
   
   private func searchLocView(for item: GMSAutocompletePrediction) -> some View {
@@ -46,11 +56,28 @@ struct SearchView: View {
       Text(item.attributedFullText.string)
     }
     .onTapGesture {
+      
       GMSPlacesClient.shared().lookUpPlaceID(item.placeID, callback: { (place, err) in
         if let place = place {
-          self.select(Location.make(with: place.coordinate, name: place.name))
+          if let metaData = place.photos?.first {
+            GMSPlacesClient.shared().loadPlacePhoto(metaData) { (photo, _) in
+              self.select(Location.make(with: place.coordinate, name: place.name, photo: photo))
+            }
+          } else {
+            self.select(Location.make(with: place.coordinate, name: place.name))
+          }
+          
         }
       })
+    }
+  }
+  
+  private func popularLocView(for loc: Location) -> some View {
+    Group {
+      OptionalText(loc.name)
+    }
+    .onTapGesture {
+      self.select(loc)
     }
   }
   
@@ -58,4 +85,5 @@ struct SearchView: View {
     self.selection = selection
     showSearchView = false
   }
+  
 }

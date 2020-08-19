@@ -8,9 +8,7 @@
 
 import SwiftUI
 import Combine
-import MapKit
-
-typealias Location = MKMapItem
+import CoreLocation
 
 class ViewModel: ObservableObject {
   @Published var location: Location {
@@ -58,7 +56,7 @@ class ViewModel: ObservableObject {
     }
   }
   
-  private var fetchCancellables = [AnyCancellable]()
+  private var fetchCancellables = CancellableBag()
   
   init() {
     if let locName =  UserDefaults.standard.string(forKey: Constants.locName) {
@@ -71,7 +69,7 @@ class ViewModel: ObservableObject {
   }
   
   func refetch() {
-    fetchCancellables.forEach { $0.cancel() }
+    fetchCancellables.cancelAll()
     
     fetchZone(about: "temperature")
     fetchZone(about: "koppenmajor")
@@ -105,14 +103,13 @@ class ViewModel: ObservableObject {
   
   private func fetchAgriculture(product: BOMProduct) {
     guard let bomStn = bomStns[product] else { return }
-    guard let geo = location.latLon() else { return }
     
     let request = fetchRequest(path: Agriculture.fetchPath, params: [
       "station": bomStn.id,
-      "geo": geo
+      "geo": location.latLon()
     ])
     
-    let cancellable = URLSession.shared.dataTaskPublisher(for: request)
+    URLSession.shared.dataTaskPublisher(for: request)
       .map{ data, _ in
         let jsonObject = try? JSONSerialization.jsonObject(with: data)
         guard let json = jsonObject as? [String: Any] else { return [:] }
@@ -124,8 +121,7 @@ class ViewModel: ObservableObject {
       .sink { json in
         self.agriculture.merge(from: json)
       }
-    
-    fetchCancellables.append(cancellable)
+      .store(in: &fetchCancellables)
   }
   
   private func fetchHistoricalWeather(product: BOMProduct) {
@@ -136,7 +132,7 @@ class ViewModel: ObservableObject {
       "product": String(product.rawValue)
     ])
     
-    let cancellable = URLSession.shared.dataTaskPublisher(for: request)
+    URLSession.shared.dataTaskPublisher(for: request)
       .map{ data, _ in
         let jsonObject = try? JSONSerialization.jsonObject(with: data)
         guard let json = jsonObject as? [String: Any] else { return nil }
@@ -146,19 +142,18 @@ class ViewModel: ObservableObject {
       .replaceError(with: nil)
       .receive(on: DispatchQueue.main)
       .assign(to: \.historicalWeathers[product], on: self)
+      .store(in: &fetchCancellables)
     
-    fetchCancellables.append(cancellable)
   }
   
   private func fetchBOMStation(product: BOMProduct, completion: @escaping (BomStation?) -> Void) {
-    guard let geo = location.latLon() else { return }
     
     let request = fetchRequest(path: BomStation.fetchPath, params: [
-      "geo": geo,
+      "geo": location.latLon(),
       "product": String(product.rawValue)
     ])
     
-    let cancellable = URLSession.shared.dataTaskPublisher(for: request)
+    URLSession.shared.dataTaskPublisher(for: request)
       .map{ (data, _) -> BomStation? in
         let jsonObject = try? JSONSerialization.jsonObject(with: data)
         guard let json = jsonObject as? [String: Any] else { return nil }
@@ -172,8 +167,7 @@ class ViewModel: ObservableObject {
 
         completion(bomStn)
       }
-    
-    fetchCancellables.append(cancellable)
+      .store(in: &fetchCancellables)
     
   }
   
@@ -194,13 +188,12 @@ class ViewModel: ObservableObject {
   }
   
   private func fetchWeather() {
-    guard let geo = location.latLon() else { return }
     
     let request = fetchRequest(path: Weather.fetchPath, params: [
-      "geo": geo
+      "geo": location.latLon()
     ])
     
-    let cancellable = URLSession.shared.dataTaskPublisher(for: request)
+    URLSession.shared.dataTaskPublisher(for: request)
       .map { data, _ in
         let jsonObject = try? JSONSerialization.jsonObject(with: data)
         guard let json = jsonObject as? [String: Any] else { return nil }
@@ -210,19 +203,17 @@ class ViewModel: ObservableObject {
       .replaceError(with: nil)
       .receive(on: DispatchQueue.main)
       .assign(to: \.weather, on: self)
-    
-    fetchCancellables.append(cancellable)
+      .store(in: &fetchCancellables)
   }
   
   private func fetchZone(about: String) {
-    guard let geo = location.latLon() else { return }
     
     let request = fetchRequest(path: Zone.fetchPath, params: [
       "about": about,
-      "geo": geo
+      "geo": location.latLon()
     ])
     
-    let cancellable = URLSession.shared.dataTaskPublisher(for: request)
+    URLSession.shared.dataTaskPublisher(for: request)
       .map { data, _ in
         let jsonObject = try? JSONSerialization.jsonObject(with: data)
         guard let json = jsonObject as? [String: Any] else { return nil }
@@ -232,8 +223,7 @@ class ViewModel: ObservableObject {
       .replaceError(with: nil)
       .receive(on: DispatchQueue.main)
       .assign(to: about == "koppenmajor" ? \.koppenZone : \.tempZone, on: self)
-    
-    fetchCancellables.append(cancellable)
+      .store(in: &fetchCancellables)
   }
   
   private func fetchSeeds(tempZone: Int, month: Int? = nil, page: Int? = nil) {
@@ -245,7 +235,7 @@ class ViewModel: ObservableObject {
       "page": String(page ?? 0)
     ])
     
-    let cancellable = URLSession.shared.dataTaskPublisher(for: request)
+    URLSession.shared.dataTaskPublisher(for: request)
       .map { data, _ in
         let jsonObject = try? JSONSerialization.jsonObject(with: data)
         let json = jsonObject as? [String: Any]
@@ -260,8 +250,7 @@ class ViewModel: ObservableObject {
     .replaceError(with: nil)
     .receive(on: DispatchQueue.main)
     .assign(to: \.seeds, on: self)
-    
-    fetchCancellables.append(cancellable)
+    .store(in: &fetchCancellables)
   }
   
   private func fetchRequest(path: String, params: [String: String]) -> URLRequest {

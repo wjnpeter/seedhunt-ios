@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreLocation
+import GooglePlaces
 
 // conmunicate with Core Location
 // eg. fetch user location
@@ -46,7 +47,7 @@ class LocationHelper: NSObject {
   func userLocation(completion: LocationHelperCompletion?) {
     switch CLLocationManager.authorizationStatus() {
     case .denied, .restricted:
-      finalisedUserLocation(with: lastLocation, completion: completion)
+      makeLocation(with: lastLocation, completion: completion)
       return
     case .notDetermined:
       authorize { status in
@@ -58,18 +59,18 @@ class LocationHelper: NSObject {
     default:
       break;
     }
-    
+      
     if let lastLocation = lastLocation,
       Date().timeIntervalSince(lastLocation.timestamp) < invalidTimeInterval {
-      finalisedUserLocation(with: lastLocation, completion: completion)
+      makeLocation(with: lastLocation, completion: completion)
       return
     }
-    
+
     userLocationCompletion = completion
     LocationHelper.shared.locationManager.startUpdatingLocation()
   }
   
-  private func finalisedUserLocation(with clLocation: CLLocation?, completion: LocationHelperCompletion?) {
+  func makeLocation(with clLocation: CLLocation?, completion: LocationHelperCompletion?) {
     let loc = clLocation ?? lastLocation
     if loc == nil {
       completion?(defaultLocation)
@@ -77,7 +78,7 @@ class LocationHelper: NSObject {
     }
     
     CLGeocoder().reverseGeocodeLocation(loc!) { places, _ in
-      let ret = Location.make(with: loc!.coordinate, name: nil)
+      var ret = Location.make(with: loc!.coordinate, name: nil)
       if let placeMark = places?.first {
         ret.name = placeMark.name
       }
@@ -89,7 +90,7 @@ class LocationHelper: NSObject {
 
 extension LocationHelper: CLLocationManagerDelegate {
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    finalisedUserLocation(with: locations.last!, completion: userLocationCompletion)
+    makeLocation(with: locations.last!, completion: userLocationCompletion)
     
     assert(LocationHelper.shared.locationManager == manager)
     LocationHelper.shared.locationManager.stopUpdatingLocation()
@@ -105,7 +106,13 @@ extension LocationHelper: CLLocationManagerDelegate {
 extension LocationHelper {
   // MARK: Popular Locations
   
-  static let hobart = Location.make(with: CLLocationCoordinate2DMake(-42.8821, 147.3272), name: "hobart")
+  static var popularLocations: [Location] {
+    [LocationHelper.hobart, LocationHelper.melbourne, LocationHelper.sydney,
+     LocationHelper.brisbane, LocationHelper.adelaide, LocationHelper.perth]
+  }
+  
+  // TODO add default image 好看的
+  static let hobart = Location.make(with: CLLocationCoordinate2DMake(-42.8821, 147.3272), name: "hobart", photo: nil)
   static let melbourne = Location.make(with: CLLocationCoordinate2DMake(-37.8136, 144.9631), name: "melbourne")
   static let sydney = Location.make(with: CLLocationCoordinate2DMake(-33.8688, 151.2093), name: "sydney")
   static let brisbane = Location.make(with: CLLocationCoordinate2DMake(-27.470125, 153.021072), name: "brisbane")
@@ -113,3 +120,5 @@ extension LocationHelper {
   static let perth = Location.make(with: CLLocationCoordinate2DMake(-31.9505, 115.8605), name: "perth")
   
 }
+
+

@@ -9,28 +9,14 @@
 import Foundation
 import CoreLocation
 import MapKit
+import Combine
 
-
-extension Location {
-  func latLon() -> String? {
-    return "\(latitude),\(longitude)"
+typealias CancellableBag = Set<AnyCancellable>
+extension CancellableBag {
+  mutating func cancelAll() {
+    forEach { $0.cancel() }
+    removeAll()
   }
-  
-  var latitude: CLLocationDegrees {
-    placemark.coordinate.latitude
-  }
-  
-  var longitude: CLLocationDegrees {
-    placemark.coordinate.longitude
-  }
-  
-  static func make(with coordinate: CLLocationCoordinate2D, name: String?) -> Location {
-    let ret = Location(placemark: MKPlacemark(coordinate: coordinate))
-    ret.name = name
-    
-    return ret
-  }
-  
 }
 
 extension ClosedRange where Bound == Int {

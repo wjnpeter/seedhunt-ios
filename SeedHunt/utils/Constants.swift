@@ -10,7 +10,7 @@ import Foundation
 
 struct Constants {
   static let serverBaseUrl = "https://seedhunt.com.au/"
-  
+  static let wikiBaseUrl = "https://en.wikipedia.org/w/api.php"
 }
 
 // MARK: - keys for UserDefault

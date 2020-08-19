@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct OptionalText: View {
   var content: String?
@@ -45,27 +46,29 @@ struct OptionalURLImage: View {
   
   @State private var img: UIImage?
   
+  @State private var fetchCancellable = CancellableBag()
+  
   var body: some View {
     Image(uiImage: img ?? UIImage())
       .resizable()
       .aspectRatio(contentMode: .fit)
       .onAppear {
         self.fetchImg()
-    }
+      }
   }
   
   private func fetchImg() {
     if img != nil { return }
+    guard let url = url else { return }
     
-    DispatchQueue.global().async {
-      if let url = self.url,
-        let data = try? Data(contentsOf: url) {
-        DispatchQueue.main.async {
-          self.img = UIImage(data: data)
-        }
-        
-      }
-    }
+    fetchCancellable.cancelAll()
+    URLSession.shared.dataTaskPublisher(for: url)
+      .map({ data, _ in return UIImage(data: data) })
+      .replaceError(with: nil)
+      .receive(on: DispatchQueue.main)
+      .assign(to: \.img, on: self)
+      .store(in: &fetchCancellable)
+
   }
 }
 

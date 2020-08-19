@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		66939EB739CD2ADE9326B363 /* Pods_SeedHunt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CABF03F1F5ED0DB2AEC7323A /* Pods_SeedHunt.framework */; };
+		BA041B3D24ECC7AD0003F0D8 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA041B3C24ECC7AD0003F0D8 /* Location.swift */; };
 		BA29CEB824E38C510085B466 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29CEB724E38C510085B466 /* Extensions.swift */; };
 		BA29CEBA24E5000B0085B466 /* SeedDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29CEB924E5000B0085B466 /* SeedDetailView.swift */; };
 		BA29CEBC24E5259B0085B466 /* SupportingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29CEBB24E5259B0085B466 /* SupportingViews.swift */; };
@@ -41,6 +42,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BA041B3C24ECC7AD0003F0D8 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		BA29CEB724E38C510085B466 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		BA29CEB924E5000B0085B466 /* SeedDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedDetailView.swift; sourceTree = "<group>"; };
 		BA29CEBB24E5259B0085B466 /* SupportingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingViews.swift; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 				BAF4795C24E2078B00675F6E /* Weather.swift */,
 				BA29CEBF24E55DCC0085B466 /* HistoricalWeather.swift */,
 				BAF4796724E20C1800675F6E /* Moon.swift */,
+				BA041B3C24ECC7AD0003F0D8 /* Location.swift */,
 				BAF4795E24E2080B00675F6E /* Agriculture.swift */,
 				BAF4796024E2087100675F6E /* Zone.swift */,
 				BAF4796324E20B9100675F6E /* Seed.swift */,
@@ -350,6 +353,7 @@
 				BA29CEC024E55DCC0085B466 /* HistoricalWeather.swift in Sources */,
 				BAF4796B24E2287500675F6E /* DarkSkyFetcher.swift in Sources */,
 				BAF4795D24E2078B00675F6E /* Weather.swift in Sources */,
+				BA041B3D24ECC7AD0003F0D8 /* Location.swift in Sources */,
 				BA29CEC424E6AC650085B466 /* WeatherView.swift in Sources */,
 				BA29CEC624E6AC720085B466 /* MoonView.swift in Sources */,
 				BA29CECE24E900280085B466 /* PlacePicker.swift in Sources */,
