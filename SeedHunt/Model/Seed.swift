@@ -32,10 +32,39 @@ struct Seed: Hashable, Equatable {
   // z1: [0, 1, 2]
   var time = [SeedZone: [Int]]()
   
+  func favourite() {
+    var favourites = UserDefaults.standard.stringArray(forKey: Constants.favourites)
+    if favourites == nil {
+      favourites = []
+    }
+    
+    if !favourites!.contains(name) {
+      favourites?.append(name)
+      UserDefaults.standard.set(favourites, forKey: Constants.favourites)
+    }
+  }
+  
+  func isFavourite() -> Bool {
+    guard let favourites = UserDefaults.standard.stringArray(forKey: Constants.favourites) else {
+      return false
+    }
+    
+    return favourites.contains(name)
+  }
+  
   func months(for zone: Zone?) -> [Int] {
     guard let zone = zone else { return [] }
     guard let seedZone = SeedZone(zone: zone) else { return [] }
     return time[seedZone] ?? []
+  }
+  
+  func rateDisplay() -> String? {
+    guard let rate = rate else { return nil }
+    
+    let hardnesses = ["Very Easy", "Easy", "Average", "Hard", "Demanding"]
+    guard Int(rate) < hardnesses.count else { return nil }
+    
+    return hardnesses[Int(rate)]
   }
   
   func monthsDisplay(for zone: Zone?) -> String? {

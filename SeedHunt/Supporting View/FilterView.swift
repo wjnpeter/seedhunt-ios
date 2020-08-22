@@ -11,7 +11,6 @@ import SwiftUI
 struct FilterView: View {
   @Binding var seedFilter: SeedFilter
   @Binding var showFilterView: Bool
-  
   @State private var draft: SeedFilter
   
   init(seedFilter: Binding<SeedFilter>, showFilterView: Binding<Bool>) {
@@ -22,24 +21,26 @@ struct FilterView: View {
   
   var body: some View {
     NavigationView {
-      VStack {
-        Text("Month")
-        Picker("", selection: $draft.month) {
-          Text("Any").tag(String?.none)
+      Form {
+        Picker("Month", selection: $draft.month) {
+          Text("Any").tag(Int?.none)
           ForEach(Calendar.current.monthSymbols, id: \.self) { (monthSymbol: String?) in
-            Text(monthSymbol!).tag(Calendar.current.monthSymbols.firstIndex(of: monthSymbol!)!)
+            Text(monthSymbol!).tag(Calendar.current.monthSymbols.firstIndex(of: monthSymbol!))
           }
         }
-        .labelsHidden()
         
-        Text("Category")
-        Picker("", selection: $draft.category) {
+        Picker("Category", selection: $draft.category) {
           Text("Any").tag(Seed.Category?.none)
           ForEach(Seed.Category.allCases, id: \.rawValue) { (category: Seed.Category?) in
             Text(category!.rawValue).tag(category)
           }
         }
-        .labelsHidden()
+        
+        Section {
+          Toggle(isOn: $draft.favouriteOnly) {
+            Text("My Favourite Only")
+          }
+        }
         
 
         // not work:
@@ -67,3 +68,9 @@ struct FilterView: View {
   }
 }
 
+
+struct FilterView_Previews: PreviewProvider {
+  static var previews: some View {
+    FilterView(seedFilter: .constant(SeedFilter()), showFilterView: .constant(true))
+  }
+}

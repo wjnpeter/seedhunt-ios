@@ -59,18 +59,29 @@ class LocationHelper: NSObject {
     default:
       break;
     }
-      
-    if let lastLocation = lastLocation,
-      Date().timeIntervalSince(lastLocation.timestamp) < invalidTimeInterval {
-      makeLocation(with: lastLocation, completion: completion)
-      return
+    
+    GMSPlacesClient.shared().currentPlace { (places, _) in
+      if let place = places?.likelihoods.first?.place {
+        if let metaData = place.photos?.first {
+          GMSPlacesClient.shared().loadPlacePhoto(metaData) { (photo, _) in
+            completion?(Location.make(with: place.coordinate, name: place.name, photo: photo))
+          }
+        } else {
+          completion?(Location.make(with: place.coordinate, name: place.name))
+        }
+      } else if let lastLocation = self.lastLocation,
+        Date().timeIntervalSince(lastLocation.timestamp) < self.invalidTimeInterval {
+        self.makeLocation(with: lastLocation, completion: completion)
+      } else {
+        self.userLocationCompletion = completion
+        LocationHelper.shared.locationManager.startUpdatingLocation()
+      }
     }
-
-    userLocationCompletion = completion
-    LocationHelper.shared.locationManager.startUpdatingLocation()
+      
   }
   
-  func makeLocation(with clLocation: CLLocation?, completion: LocationHelperCompletion?) {
+  // TODO 用这个方法生成的Location没有photo
+  private func makeLocation(with clLocation: CLLocation?, completion: LocationHelperCompletion?) {
     let loc = clLocation ?? lastLocation
     if loc == nil {
       completion?(defaultLocation)
@@ -104,6 +115,29 @@ extension LocationHelper: CLLocationManagerDelegate {
 }
 
 extension LocationHelper {
+  static func makeDefault() -> Location {
+    if let locName =  UserDefaults.standard.string(forKey: Constants.locName) {
+      let locLat =  UserDefaults.standard.double(forKey: Constants.locLat)
+      let locLon =  UserDefaults.standard.double(forKey: Constants.locLon)
+      return Location.make(with: CLLocationCoordinate2DMake(locLat, locLon), name: locName)
+    } else {
+      return LocationHelper.sydney
+    }
+  }
+  
+  // MARK: Search
+  
+  struct PopularSearch: Identifiable {
+    var category: Seed.Category
+    var location: Location
+    var id = UUID()
+  }
+  
+  static var popularSearches: [PopularSearch] = {
+    let locs = LocationHelper.popularLocations.shuffled()
+    return locs.map { PopularSearch(category: Seed.Category.allCases.randomElement()!, location: $0) }
+  }()
+  
   // MARK: Popular Locations
   
   static var popularLocations: [Location] {

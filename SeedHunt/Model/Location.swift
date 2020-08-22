@@ -30,4 +30,6 @@ struct Location {
   static func make(with coordinate: CLLocationCoordinate2D, name: String? = nil, photo: UIImage? = nil) -> Location {
     return Location(coordinate: coordinate, name: name, photo: photo)
   }
+  
+  
 }

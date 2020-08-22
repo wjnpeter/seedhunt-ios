@@ -30,18 +30,39 @@ class ViewModel: ObservableObject {
   }
   @Published private(set) var koppenZone: Zone?
 
-  @Published private(set) var seeds: [Seed]?
+  @Published private var seeds: [Seed]?
+  @Published var seedFilter = SeedFilter()
+  var filterSeeds: [Seed] {
+    guard let seeds = seeds else { return [] }
+    
+    var ret = seeds
+    if let filterMonth = seedFilter.month,
+      let tempZone = tempZone {
+      ret = ret.filter { $0.months(for: tempZone).contains(filterMonth) }
+    }
+    
+    if let filterCategory = seedFilter.category {
+      ret = ret.filter { $0.category == filterCategory }
+    }
+    
+    if seedFilter.favouriteOnly {
+      ret = ret.filter { $0.isFavourite() }
+    }
+    
+    return ret
+  }
   
   @Published private(set) var weather: Weather? {
     didSet {
       fetchMoon()
     }
   }
-  @Published private(set) var moon: [Moon]?
   
   private var bomStns: [BOMProduct: BomStation] = [:]
   @Published private(set) var historicalWeathers: [BOMProduct: HistoricalWeather] = [:]
   @Published private(set) var agriculture = Agriculture()
+  
+  private(set) var fetchTime = Date()
   
   func agriValue(for product: BOMProduct) -> Double? {
     switch product {
@@ -58,14 +79,13 @@ class ViewModel: ObservableObject {
   
   private var fetchCancellables = CancellableBag()
   
-  init() {
-    if let locName =  UserDefaults.standard.string(forKey: Constants.locName) {
-      let locLat =  UserDefaults.standard.double(forKey: Constants.locLat)
-      let locLon =  UserDefaults.standard.double(forKey: Constants.locLon)
-      location = Location.make(with: CLLocationCoordinate2DMake(locLat, locLon), name: locName)
+  init(location: Location? = nil) {
+    if location == nil {
+      self.location = LocationHelper.makeDefault()
     } else {
-      location = LocationHelper.sydney
+      self.location = location!
     }
+    
   }
   
   func refetch() {
@@ -97,6 +117,8 @@ class ViewModel: ObservableObject {
     fetchBOMStation(product: BOMProduct.sunshine) { _ in
       self.fetchAgriculture(product: BOMProduct.sunshine)
     }
+    
+    fetchTime = Date()
   }
   
   // MARK: fetch functions
@@ -172,23 +194,44 @@ class ViewModel: ObservableObject {
   }
   
   private func fetchMoon() {
-    guard let moonPhases = weather?.daily?.compactMap({ $0.moonPhase }) else { return }
+    guard let moonDailyPhases = weather?.daily?.compactMap({ $0.moonPhase }) else { return }
     
-    FirebaseClient.call(fn: "actions", data: ["phases": moonPhases]) { (result, error) in
+    // moon actions
+    FirebaseClient.call(fn: "actions", data: ["phases": moonDailyPhases]) { (result, error) in
       if let moonActions = result?.data as? [[String]] {
         DispatchQueue.main.async {
-          self.moon = []
-          moonActions.forEach {
-            self.moon?.append(Moon(action: $0))
+          for (idx, actions) in moonActions.enumerated() {
+            self.weather!.daily![idx].moonActions = actions
           }
+          
         }
-        
       }
     }
+    
+    // moon move
+    let request = fetchRequest(path: Weather.fetchPathMoon, params: [
+      "fcLength": String(moonDailyPhases.count)
+    ])
+    
+    URLSession.shared.dataTaskPublisher(for: request)
+      .map { data, _ in
+        let jsonObject = try? JSONSerialization.jsonObject(with: data) 
+        return jsonObject as? [String]
+      }
+      .replaceError(with: nil)
+      .receive(on: DispatchQueue.main)
+      .sink { (moves: [String]?) in
+        if let moves = moves {
+          for (idx, move) in moves.enumerated() {
+            self.weather!.daily![idx].moonMove = move
+          }
+        }
+      }
+      .store(in: &fetchCancellables)
+      
   }
   
   private func fetchWeather() {
-    
     let request = fetchRequest(path: Weather.fetchPath, params: [
       "geo": location.latLon()
     ])
@@ -206,7 +249,7 @@ class ViewModel: ObservableObject {
       .store(in: &fetchCancellables)
   }
   
-  private func fetchZone(about: String) {
+  func fetchZone(about: String) {
     
     let request = fetchRequest(path: Zone.fetchPath, params: [
       "about": about,
@@ -268,3 +311,8 @@ class ViewModel: ObservableObject {
   }
 }
 
+struct SeedFilter {
+  var month: Int? // from 0
+  var category: Seed.Category?
+  var favouriteOnly = false
+}

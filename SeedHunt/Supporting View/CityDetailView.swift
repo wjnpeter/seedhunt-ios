@@ -12,25 +12,80 @@ struct CityDetailView: View {
   @ObservedObject var viewModel: ViewModel
   
   @State private var selectedTag = 0
+  @State private var customTitle: Bool
+  
+  private var title: String {
+    viewModel.location.name ?? ""
+  }
+  
+  init(viewModel: ObservedObject<ViewModel>) {
+    self._viewModel = viewModel
+    
+    _customTitle = State(initialValue: viewModel.wrappedValue.location.photo != nil)
+  }
   
   var body: some View {
-    
-    VStack {
-      Picker(selection: self.$selectedTag, label: EmptyView()) {
-        Text("Weather").tag(0)
-        Text("Agriculture").tag(1)
-        Text("Soil").tag(2)
+    GeometryReader { geometry in
+      VStack {
+        ZStack(alignment: .bottomLeading) {
+          OptionalImage(uiImage: self.viewModel.location.photo)
+            .frame(width: geometry.size.width, height: geometry.size.width * 9 / 16, alignment: .center)
+          
+          if self.customTitle {
+            OptionalText(self.title)
+              .padding(Style.spacing.superview)
+              .foregroundColor(Color(UIColor.lightText))
+              .font(Font.largeTitle.bold())
+          }
+        }
+        
+        Picker(selection: self.$selectedTag, label: EmptyView()) {
+          Text("Weather").tag(0)
+          Text("Agriculture").tag(1)
+          Text("Soil").tag(2)
+        }
+        .pickerStyle(SegmentedPickerStyle())
+        
+        self.subheadline
+        
+        List {
+          if self.selectedTag == 0 { self.weatherCards }
+          else if self.selectedTag == 1 { self.agriCards }
+          else if self.selectedTag == 2 { self.soilCards }
+        }
+        .onAppear {
+          UITableView.appearance().separatorStyle = .none
+        }
+        .onDisappear {
+          UITableView.appearance().separatorStyle = .singleLine
+        }
+        
       }
-      .pickerStyle(SegmentedPickerStyle())
-      
-      if selectedTag == 0 { weatherCards }
-      else if selectedTag == 1 { agriCards }
-      else if selectedTag == 2 { soilCards }
+      .navigationBarTitle(Text(self.customTitle ? "" : self.title),
+                          displayMode: self.customTitle ? .inline : .automatic)
+      .navigationBarHidden(self.customTitle)
     }
   }
   
+  private var subheadline: some View {
+    Group {
+      if self.selectedTag == 0 { Text("Historical Weather") }
+      else if self.selectedTag == 1 { Text("Updated \(updatedTime)") }
+      else if self.selectedTag == 2 { Text("Updated \(updatedTime)") }
+    }
+    .font(.caption)
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .padding(.leading, Style.spacing.superview)
+  }
+  
+  private var updatedTime: String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "d/MMM 09:mm:ss"
+    return dateFormatter.string(from: viewModel.fetchTime)
+  }
+  
   private var soilCards: some View {
-    List {
+    Group {
       soilCard("5cm Depth", number: \.t5)
       soilCard("10cm Depth", number: \.t10)
       soilCard("20cm Depth", number: \.t20)
@@ -52,7 +107,7 @@ struct CityDetailView: View {
   }
   
   private var agriCards: some View {
-    List {
+    Group {
       agriCard(.terrTemperature)
       agriCard(.sunshine)
       agriCard(.evaporation)
@@ -72,7 +127,7 @@ struct CityDetailView: View {
   }
   
   private var weatherCards: some View {
-    List {
+    Group {
       weatherCard(.rainfallMonthly)
       weatherCard(.maxtemperatureMonthly)
       weatherCard(.mintemperatureMonthly)
@@ -128,20 +183,20 @@ struct CityDetailView: View {
     }
   }
   
-  private func icon(_ product: BOMProduct) -> UIImage? {
+  private func icon(_ product: BOMProduct) -> String? {
     switch product {
     case .rainfallMonthly, .rainfallDaily:
-      return UIImage(systemName: "drop")
+      return "drop"
     case .maxtemperatureMonthly, .maxtemperatureDaily:
-      return UIImage(systemName: "thermometer.sun")
+      return "thermometer.sun"
     case .mintemperatureMonthly, .mintemperatureDaily:
-      return UIImage(systemName: "thermometer.snowflake")
+      return "thermometer.snowflake"
     case .terrTemperature:
-      return UIImage(systemName: "snow")
+      return "snow"
     case .evaporation:
-      return UIImage(systemName: "drop")
+      return "drop"
     case .sunshine:
-      return UIImage(systemName: "sun.min")
+      return "sun.min"
     }
   }
 }
@@ -149,7 +204,7 @@ struct CityDetailView: View {
 extension CityDetailView {
   
   struct StatCard: View {
-    var icon: UIImage? = nil
+    var icon: String? = nil
     var title: String
     var number: Double
     var unit: String
@@ -157,24 +212,36 @@ extension CityDetailView {
     
     var body: some View {
       ZStack {
-        RoundedRectangle(cornerRadius: 4)
-          .foregroundColor(Color.red)
         
-        HStack {
-          OptionalImage(uiimage: icon)
+        RoundedRectangle(cornerRadius: Style.shape.cornerRadius)
+          .foregroundColor(Color(UIColor.systemGroupedBackground))
+        
+        HStack(alignment: .center) {
+          OptionalImage(systemName: icon)
+            .font(.system(size: 50))
+            .offset(x: 0, y: -Style.spacing.superview * 2.5)
           
           Text(title)
+            .font(.body)
           
-          VStack {
-            HStack {
-              Text(String(number))
+          Spacer()
+          
+          VStack(alignment: .trailing) {
+            HStack(alignment: .firstTextBaseline, spacing: 0) {
+              Text(String(Int(number)))
+                .font(.largeTitle)
               Text(unit)
+                .font(.body)
             }
             
             OptionalText(numberDesc)
+              .font(Font.footnote)
           }
         }
+        .padding(horizontal: Style.spacing.siblings, vertical: Style.spacing.superview)
       }
+      .padding(.top, icon != nil ? Style.spacing.superview * 2 : 0)
+      
     }
     
   }

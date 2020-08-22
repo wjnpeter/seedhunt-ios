@@ -30,12 +30,19 @@ struct OptionalText: View {
 }
 
 struct OptionalImage: View {
-  var uiimage: UIImage?
+  var name: String?
+  var systemName: String?
+  var uiImage: UIImage?
   
   var body: some View {
     Group {
-      if uiimage != nil {
-        Image(uiImage: uiimage!)
+      if uiImage != nil {
+        Image(uiImage: uiImage!)
+          .resizable()
+      } else if systemName != nil {
+        Image(systemName: systemName!)
+      } else if name != nil {
+        Image(name!)
       }
     }
   }
@@ -72,3 +79,15 @@ struct OptionalURLImage: View {
   }
 }
 
+struct ActivityIndicator: UIViewRepresentable {
+    @Binding var isAnimating: Bool
+    let style: UIActivityIndicatorView.Style
+
+    func makeUIView(context: UIViewRepresentableContext<ActivityIndicator>) -> UIActivityIndicatorView {
+        return UIActivityIndicatorView(style: style)
+    }
+
+    func updateUIView(_ uiView: UIActivityIndicatorView, context: UIViewRepresentableContext<ActivityIndicator>) {
+        isAnimating ? uiView.startAnimating() : uiView.stopAnimating()
+    }
+}

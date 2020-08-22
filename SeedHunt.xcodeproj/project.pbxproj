@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		66939EB739CD2ADE9326B363 /* Pods_SeedHunt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CABF03F1F5ED0DB2AEC7323A /* Pods_SeedHunt.framework */; };
 		BA041B3D24ECC7AD0003F0D8 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA041B3C24ECC7AD0003F0D8 /* Location.swift */; };
+		BA041B3F24ECEB360003F0D8 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA041B3E24ECEB360003F0D8 /* LoadingView.swift */; };
+		BA041B4124ECFD0B0003F0D8 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA041B4024ECFD0B0003F0D8 /* Style.swift */; };
+		BA041B4324EE32230003F0D8 /* SeedRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA041B4224EE32230003F0D8 /* SeedRateView.swift */; };
+		BA041B4524EE3B4B0003F0D8 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA041B4424EE3B4B0003F0D8 /* ShareSheet.swift */; };
+		BA041B4724F089520003F0D8 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA041B4624F089510003F0D8 /* Label.swift */; };
 		BA29CEB824E38C510085B466 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29CEB724E38C510085B466 /* Extensions.swift */; };
 		BA29CEBA24E5000B0085B466 /* SeedDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29CEB924E5000B0085B466 /* SeedDetailView.swift */; };
 		BA29CEBC24E5259B0085B466 /* SupportingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29CEBB24E5259B0085B466 /* SupportingViews.swift */; };
@@ -32,7 +37,6 @@
 		BAF4795F24E2080B00675F6E /* Agriculture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF4795E24E2080B00675F6E /* Agriculture.swift */; };
 		BAF4796124E2087100675F6E /* Zone.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF4796024E2087100675F6E /* Zone.swift */; };
 		BAF4796424E20B9100675F6E /* Seed.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF4796324E20B9100675F6E /* Seed.swift */; };
-		BAF4796824E20C1800675F6E /* Moon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF4796724E20C1800675F6E /* Moon.swift */; };
 		BAF4796B24E2287500675F6E /* DarkSkyFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF4796A24E2287500675F6E /* DarkSkyFetcher.swift */; };
 		BAF4796D24E236CD00675F6E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BAF4796C24E236CD00675F6E /* GoogleService-Info.plist */; };
 		BAF4797024E2387300675F6E /* FirebaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF4796F24E2387300675F6E /* FirebaseClient.swift */; };
@@ -43,6 +47,11 @@
 
 /* Begin PBXFileReference section */
 		BA041B3C24ECC7AD0003F0D8 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		BA041B3E24ECEB360003F0D8 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		BA041B4024ECFD0B0003F0D8 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
+		BA041B4224EE32230003F0D8 /* SeedRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedRateView.swift; sourceTree = "<group>"; };
+		BA041B4424EE3B4B0003F0D8 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
+		BA041B4624F089510003F0D8 /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		BA29CEB724E38C510085B466 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		BA29CEB924E5000B0085B466 /* SeedDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedDetailView.swift; sourceTree = "<group>"; };
 		BA29CEBB24E5259B0085B466 /* SupportingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingViews.swift; sourceTree = "<group>"; };
@@ -68,7 +77,6 @@
 		BAF4795E24E2080B00675F6E /* Agriculture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Agriculture.swift; sourceTree = "<group>"; };
 		BAF4796024E2087100675F6E /* Zone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zone.swift; sourceTree = "<group>"; };
 		BAF4796324E20B9100675F6E /* Seed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Seed.swift; sourceTree = "<group>"; };
-		BAF4796724E20C1800675F6E /* Moon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moon.swift; sourceTree = "<group>"; };
 		BAF4796A24E2287500675F6E /* DarkSkyFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkSkyFetcher.swift; sourceTree = "<group>"; };
 		BAF4796C24E236CD00675F6E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BAF4796F24E2387300675F6E /* FirebaseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseClient.swift; sourceTree = "<group>"; };
@@ -114,9 +122,13 @@
 			children = (
 				BA29CEBB24E5259B0085B466 /* SupportingViews.swift */,
 				BA29CEC724E781DF0085B466 /* CalendarViews.swift */,
+				BA041B4424EE3B4B0003F0D8 /* ShareSheet.swift */,
 				BA29CECD24E900280085B466 /* PlacePicker.swift */,
 				BA29CECB24E803EC0085B466 /* SearchView.swift */,
+				BA041B4624F089510003F0D8 /* Label.swift */,
+				BA041B3E24ECEB360003F0D8 /* LoadingView.swift */,
 				BA29CEB924E5000B0085B466 /* SeedDetailView.swift */,
+				BA041B4224EE32230003F0D8 /* SeedRateView.swift */,
 				BA29CEBD24E544340085B466 /* CityDetailView.swift */,
 				BA29CEC324E6AC650085B466 /* WeatherView.swift */,
 				BA29CEC524E6AC720085B466 /* MoonView.swift */,
@@ -176,7 +188,6 @@
 				BAF4796924E2267D00675F6E /* DataFetcher */,
 				BAF4795C24E2078B00675F6E /* Weather.swift */,
 				BA29CEBF24E55DCC0085B466 /* HistoricalWeather.swift */,
-				BAF4796724E20C1800675F6E /* Moon.swift */,
 				BA041B3C24ECC7AD0003F0D8 /* Location.swift */,
 				BAF4795E24E2080B00675F6E /* Agriculture.swift */,
 				BAF4796024E2087100675F6E /* Zone.swift */,
@@ -202,6 +213,7 @@
 				BA29CED524EB538F0085B466 /* LocationHelper.swift */,
 				BA29CEB724E38C510085B466 /* Extensions.swift */,
 				BA29CED324EA5EEA0085B466 /* PropertyWrappers.swift */,
+				BA041B4024ECFD0B0003F0D8 /* Style.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -342,9 +354,11 @@
 			files = (
 				BAF4797424E359A700675F6E /* BOMFetcher.swift in Sources */,
 				BAAD2D4924887DF100ECCC7A /* AppDelegate.swift in Sources */,
-				BAF4796824E20C1800675F6E /* Moon.swift in Sources */,
+				BA041B4524EE3B4B0003F0D8 /* ShareSheet.swift in Sources */,
 				BA29CEBC24E5259B0085B466 /* SupportingViews.swift in Sources */,
 				BA29CECC24E803EC0085B466 /* SearchView.swift in Sources */,
+				BA041B4724F089520003F0D8 /* Label.swift in Sources */,
+				BA041B3F24ECEB360003F0D8 /* LoadingView.swift in Sources */,
 				BAAD2D4B24887DF100ECCC7A /* SceneDelegate.swift in Sources */,
 				BAAD2D4D24887DF100ECCC7A /* HomeView.swift in Sources */,
 				BAF4797224E356B600675F6E /* ViewModel.swift in Sources */,
@@ -354,6 +368,7 @@
 				BAF4796B24E2287500675F6E /* DarkSkyFetcher.swift in Sources */,
 				BAF4795D24E2078B00675F6E /* Weather.swift in Sources */,
 				BA041B3D24ECC7AD0003F0D8 /* Location.swift in Sources */,
+				BA041B4324EE32230003F0D8 /* SeedRateView.swift in Sources */,
 				BA29CEC424E6AC650085B466 /* WeatherView.swift in Sources */,
 				BA29CEC624E6AC720085B466 /* MoonView.swift in Sources */,
 				BA29CECE24E900280085B466 /* PlacePicker.swift in Sources */,
@@ -361,6 +376,7 @@
 				BAF4797024E2387300675F6E /* FirebaseClient.swift in Sources */,
 				BA29CED424EA5EEA0085B466 /* PropertyWrappers.swift in Sources */,
 				BA29CEB824E38C510085B466 /* Extensions.swift in Sources */,
+				BA041B4124ECFD0B0003F0D8 /* Style.swift in Sources */,
 				BA29CED624EB53900085B466 /* LocationHelper.swift in Sources */,
 				BAF4796124E2087100675F6E /* Zone.swift in Sources */,
 				BAF4797624E3757000675F6E /* Constants.swift in Sources */,

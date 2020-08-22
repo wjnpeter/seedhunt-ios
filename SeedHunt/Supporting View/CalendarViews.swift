@@ -9,23 +9,41 @@
 import SwiftUI
 
 struct CalendarViewWithRange: View {
-  var start: Date
-  var length: Int
+  let start: Date
+  let length: Int
+  var icons: [String]?
   
   @Binding var selection: Date?
+  private func isSelected(_ dt: Date?) -> Bool {
+    dt != nil && selection != nil && calendar.isDate(dt!, equalTo: selection!, toGranularity: .day)
+  }
+  private func isToday(_ dt: Date?) -> Bool {
+    dt != nil && calendar.isDate(dt!, equalTo: Date(), toGranularity: .day)
+  }
   
   @Environment(\.calendar) var calendar
   
-  @State private var rowsOfDates: [[Date?]] = []
+  @State private var rowsOfDates: [[Cell?]] = []
+  
+  private struct Cell: Identifiable, Hashable {
+    let dt: Date
+    var icon: String?
+    
+    var id: TimeInterval {
+      dt.timeIntervalSince1970
+    }
+    
+    init?(_ dt: Date?, icon: String?) {
+      guard let dt = dt else { return nil }
+      self.dt = dt
+      self.icon = icon
+    }
+  }
   
   var body: some View {
     VStack {
       ForEach(rowsOfDates, id: \.self) { (row) in
-        VStack {
-          
-          self.view(for: row)
-          Divider()
-        }
+        self.view(for: row)
       }
       
     }
@@ -34,41 +52,53 @@ struct CalendarViewWithRange: View {
     }
   }
   
-  private func view(for row: [Date?]) -> some View {
+  private func view(for row: [Cell?]) -> some View {
     HStack {
-      ForEach(row, id: \.self) { dt in
-        self.view(for: dt)
-         
+      ForEach(row, id: \.self) { cell in
+        self.view(for: cell)
       }
     }
   }
   
-  private func view(for date: Date?) -> some View {
-    ZStack {
-      backgroundView(for: date)
-      
-      Group {
-        if date != nil {
-          Text(String(self.calendar.component(.day, from: date!)))
+  private func view(for dateCell: Cell?) -> some View {
+    Group {
+      if dateCell != nil && dateCell?.icon == nil {
+        ZStack {
+          backgroundView(for: dateCell?.dt)
+          
+          Text(String(self.calendar.component(.day, from: dateCell!.dt)))
+            .font(.body)
             .onTapGesture {
-              self.selection = date!
-            }
+              self.selection = dateCell!.dt
+          }
         }
+      } else if dateCell?.icon != nil {
+        
+        VStack(spacing: 1) {
+          OptionalImage(name: dateCell?.icon)
+            .aspectRatio(contentMode: .fit)
+            .onTapGesture {
+              self.selection = dateCell!.dt
+            }
+          
+          Text(String(self.calendar.component(.day, from: dateCell!.dt)))
+            .underline(isSelected(dateCell!.dt), color: Color.orange)
+            .font(.footnote)
+        }
+      } else {
+        backgroundView(for: nil)
       }
     }
   }
   
   private func backgroundView(for date: Date?) -> some View {
     Group {
-      if date == nil {
-        Circle().foregroundColor(Color.clear)
-      } else if selection != nil &&
-        calendar.isDate(date!, equalTo: selection!, toGranularity: .day) {
+      if isSelected(date) {
         Circle().foregroundColor(Color.orange)
-      } else if calendar.isDate(date!, equalTo: Date(), toGranularity: .day) {
+      } else if isToday(date) {
         Circle().foregroundColor(Color.gray)
       } else {
-        Circle().foregroundColor(Color.clear)
+        Circle().aspectRatio(1, contentMode: .fit).foregroundColor(Color.clear)
       }
     }
   }
@@ -76,21 +106,23 @@ struct CalendarViewWithRange: View {
   private func updateRows() {
     rowsOfDates.removeAll(keepingCapacity: true)
     
-    var row = Array<Date?>(repeating: nil, count: 7)
+    var row = Array<Cell?>(repeating: nil, count: 7)
     for i in 0..<length {
       let dtDayMonthYear = calendar.date(byAdding: .day, value: i, to: start)
       
       let weekDay = calendar.component(.weekday, from: dtDayMonthYear!)
       
-      row[weekDay-1] = dtDayMonthYear
+      row[weekDay-1] = Cell(dtDayMonthYear, icon: icons?[i])
       if weekDay == 7 {
         rowsOfDates.append(row)
         
-        row = Array<Date?>(repeating: nil, count: 7)
+        row = Array<Cell?>(repeating: nil, count: 7)
       }
     }
     
-    rowsOfDates.append(row)
+    if row.contains(where: { $0 != nil }) {
+      rowsOfDates.append(row)
+    }
   }
 }
 

@@ -17,33 +17,67 @@ struct WeatherView: View {
       if weather?.daily != nil {
         ForEach(weather!.daily!) { ds in
           HStack {
-            VStack {
+            VStack(alignment: .leading) {
               OptionalText(self.day(of: ds.dt))
+              
               OptionalText(ds.summary)
+                .font(.subheadline)
+                .foregroundColor(Color(UIColor.secondaryLabel))
             }
             
-            OptionalText(ds.apparentTemperatureLow)
-            Divider()
-            OptionalText(ds.apparentTemperatureHigh)
+            Spacer(minLength: Style.spacing.siblings)
             
-            if ds.systemIcon != nil {
-              OptionalImage(uiimage: UIImage(systemName: ds.systemIcon!))
+            if ds.apparentTemperatureLow != nil {
+              OptionalText("\(Int(ds.apparentTemperatureHigh!))")
             }
+            
+            if ds.apparentTemperatureHigh != nil {
+              OptionalText("| \(Int(ds.apparentTemperatureLow!))")
+                .foregroundColor(Color(UIColor.secondaryLabel))
+            }
+            
+            OptionalImage(systemName: ds.systemIcon)
+              .font(.body)
+             
           }
+          .padding(.top, Style.spacing.superview)
         }
       }
     }
     .navigationBarTitle("Weather")
-    
+    .font(.body)
+    .foregroundColor(Color(UIColor.label))
+
   }
   
   private func day(of date: Date?) -> String? {
     guard let date = date else { return nil }
     
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "EEEE"
-    return dateFormatter.string(from: date).capitalized
-    
+    if Calendar.current.isDate(date, inSameDayAs: Date()) {
+      return "Today"
+    } else {
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "EEEE"
+      return dateFormatter.string(from: date).capitalized
+    }
   }
 }
 
+
+struct WeatherView_Previews: PreviewProvider {
+  static var previews: some View {
+    var w = Weather()
+    w.daily = []
+    
+    var ds = DarkSky()
+    ds.dt = Date()
+    ds.summary = "Partly cloudy througout the day and the day"
+    ds.apparentTemperatureLow = 10
+    ds.apparentTemperatureHigh = 20
+    ds.icon = "rain"
+    
+    w.daily?.append(ds)
+    w.daily?.append(ds)
+    return WeatherView(weather: w)
+  }
+}

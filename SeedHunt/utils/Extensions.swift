@@ -10,6 +10,7 @@ import Foundation
 import CoreLocation
 import MapKit
 import Combine
+import SwiftUI
 
 typealias CancellableBag = Set<AnyCancellable>
 extension CancellableBag {
@@ -30,4 +31,17 @@ extension ClosedRange where Bound == Int {
   func display(suffix: String = "") -> String {
     "\(lowerBound)~\(upperBound)\(suffix)"
   }
+}
+
+extension EdgeInsets {
+  init(horizontal h: CGFloat, vertical v: CGFloat) {
+    self.init(top: v, leading: h, bottom: v, trailing: h)
+  }
+}
+
+extension View {
+  func padding(horizontal h: CGFloat, vertical v: CGFloat) -> some View {
+    self.padding(EdgeInsets(horizontal: h, vertical: v))
+  }
+  
 }

@@ -10,59 +10,78 @@ import SwiftUI
 
 struct MoonView: View {
   let daily: [DarkSky]?
-  let moon: [Moon]?
   
   @State private var selectedDate: Date? = Date()
   
   @Environment(\.calendar) var calendar
   
-  private var selectedData: (DarkSky, Moon)? {
-    guard let daily = daily, let moon = moon else { return nil }
+  private var selectedData: DarkSky? {
+    guard let daily = daily else { return nil }
     
     let idx = daily.firstIndex { calendar.isDate($0.dt!, equalTo: selectedDate!, toGranularity: .day) }
     if idx == nil { return nil }
     
-    assert(idx! < moon.count)
-    return (daily[idx!], moon[idx!])
+    return daily[idx!]
+  }
+  
+  private var moonIcons: [String]? {
+    daily?.map { $0.moonIcon ?? "" }
   }
   
   var body: some View {
     VStack {
       if selectedData != nil {
-        titleView
+        // calendar
+        calendarTitleView
+        HStack {
+          ForEach(calendar.shortWeekdaySymbols, id: \.self) { monthSymbol in
+            Text(monthSymbol)
+              .frame(maxWidth: .infinity)
+              .font(.caption)
+          }
+        }
+        CalendarViewWithRange(start: selectedDate!, length: daily!.count, icons: moonIcons, selection: $selectedDate)
         
-        moonIcon
-        
+        Divider()
+        caption("Suggestions")
         moonActionsView
         
-        CalendarViewWeek(start: selectedDate!, selection: $selectedDate)
       }
     }
     .navigationBarTitle("Moon")
   }
   
-  private var titleView: some View {
-    let dtFmt = DateFormatter()
-    dtFmt.dateFormat = "d MMM yyyy"
-    dtFmt.timeZone = calendar.timeZone
-    
-    return Text(selectedDate != nil ? dtFmt.string(from: selectedDate!) : "")
+  private func caption(_ text: String) -> some View {
+    OptionalText(text)
+      .font(.subheadline)
   }
   
-  private var moonIcon: some View {
-    if let name = selectedData?.0.moonIcon,
-      let uiimage = UIImage(named: name) {
-      return Image(uiImage: uiimage)
-    }
+  private var calendarTitleView: some View {
+    let dtFmt = DateFormatter()
+    dtFmt.dateFormat = "MMM yyyy"
+    dtFmt.timeZone = calendar.timeZone
     
-    return Image(uiImage: UIImage())
+    return caption(selectedDate != nil ? dtFmt.string(from: selectedDate!) : "")
+      .padding(.bottom, Style.spacing.siblings)
+  }
+  
+  
+  private var moonIcon: some View {
+    Group {
+      if selectedData?.moonIcon != nil {
+        Image(selectedData!.moonIcon!)
+          .frame(minHeight: 100, maxHeight: .infinity)
+      }
+    }
   }
   
   private var moonActionsView: some View {
     List {
-      if selectedData?.1.action != nil {
-        ForEach(selectedData!.1.action!, id: \.self) { action in
-          Text(action)
+      if selectedData?.moonActions != nil {
+        ForEach(selectedData!.moonActions!, id: \.self) { action in
+          VStack(alignment: .leading) {
+            Text(action)
+          }
         }
       }
     }

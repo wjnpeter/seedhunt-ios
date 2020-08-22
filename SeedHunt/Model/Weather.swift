@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct Weather {
   var current: DarkSky?
@@ -31,6 +32,7 @@ struct Weather {
 
 extension Weather {
   static let fetchPath = "api/ds"
+  static let fetchPathMoon = "api/moon"
 }
 
 struct DarkSky: Identifiable {
@@ -53,9 +55,13 @@ struct DarkSky: Identifiable {
   var sunriseTime: Date?
   var sunsetTime: Date?
   var moonPhase: Double?
+  var moonMove: String? // "ascending" or "descending"
+  var moonActions: [String]?
   
   // Identifiable
   var id = UUID()
+  
+  init() {}
   
   init(json: [String: Any]) {
     if let time = json["time"] as? Int {
@@ -116,15 +122,17 @@ extension DarkSky {
   var moonIcon: String? {
     guard let moonPhase = moonPhase else { return nil }
     
-    if (moonPhase == 0) { return "new-moon" }
-    else if (moonPhase < 0.25) { return "waxing-crescent" }
-    else if (moonPhase == 0.25) { return "first-quarter" }
-    else if (moonPhase < 0.5) { return "waxing-gibbous" }
-    else if (moonPhase == 0.5) { return "full-moon" }
-    else if (moonPhase < 0.75) { return "waning-gibbous" }
-    else if (moonPhase == 0.75) { return "last-quarter" }
-    else if (moonPhase < 1) { return "waning-crescent" }
+    var name: String? = nil
+    if (moonPhase == 0) { name = "new-moon" }
+    else if (moonPhase < 0.25) { name = "waxing-crescent" }
+    else if (moonPhase == 0.25) { name = "first-quarter" }
+    else if (moonPhase < 0.5) { name = "waxing-gibbous" }
+    else if (moonPhase == 0.5) { name = "full-moon" }
+    else if (moonPhase < 0.75) { name = "waning-gibbous" }
+    else if (moonPhase == 0.75) { name = "last-quarter" }
+    else if (moonPhase < 1) { name = "waning-crescent" }
     
-    return nil
+    
+    return name
   }
 }

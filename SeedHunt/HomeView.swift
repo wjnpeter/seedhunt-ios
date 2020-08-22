@@ -9,10 +9,6 @@
 import SwiftUI
 import CoreLocation
 
-struct SeedFilter {
-  var month: Int? // from 0
-  var category: Seed.Category?
-}
 
 struct HomeView: View {
   @ObservedObject var viewModel = ViewModel()
@@ -20,80 +16,81 @@ struct HomeView: View {
   @State private var selectedSeed: Seed?
   
   @State private var showFilterView = false
-  @State private var seedFilter = SeedFilter()
   
   @State private var showSearchView = false
   
-  private var filterSeeds: [Seed] {
-    guard let seeds = viewModel.seeds else { return [] }
-    
-    var ret = seeds
-    if let filterMonth = seedFilter.month,
-      let tempZone = viewModel.tempZone {
-      ret = ret.filter { $0.months(for: tempZone).contains(filterMonth) }
-    }
-    
-    if let filterCategory = seedFilter.category {
-      ret = ret.filter { $0.category == filterCategory }
-    }
-    
-    return ret
-  }
-  
-  private var weatherIcon: UIImage {
+  private var weatherIcon: Image {
     guard let icon = viewModel.weather?.current?.systemIcon else {
-      return UIImage()
+      return Image(uiImage: UIImage())
     }
     
-    return UIImage(systemName: icon) ?? UIImage()
+    return Image(systemName: icon)
   }
   
-  private var moonIcon: UIImage {
-    guard let icon = viewModel.weather?.daily?.first?.moonIcon else {
-      return UIImage()
-    }
-    
-    return UIImage(named: icon) ?? UIImage()
+  private var moonIcon: Image {
+    Image(viewModel.weather?.daily?.first?.moonIcon ?? "")
+      .renderingMode(.original)
   }
   
   var body: some View {
     
     return GeometryReader { geometry in
+      
       NavigationView {
-        VStack {
+        ZStack {
           List {
-            ForEach(self.filterSeeds) { seed in
-              NavigationLink(destination: SeedDetailView(selectedSeed: self.$selectedSeed, tempZone: self.viewModel.tempZone),
-                             tag: seed,
-                             selection: self.$selectedSeed) {
+            ForEach(self.viewModel.filterSeeds) { seed in
+              ZStack {
                 SeedView(seed: seed)
+                
+                NavigationLink(destination: SeedDetailView(selectedSeed: self.$selectedSeed,
+                                                           tempZone: self.viewModel.tempZone),
+                               tag: seed,
+                               selection: self.$selectedSeed) {
+                                EmptyView()
+                }.buttonStyle(PlainButtonStyle())
               }
             }
           }
-          
-          HStack(alignment: .bottom) {
-            NavigationLink(destination: CityDetailView(viewModel: self.viewModel)) {
-              self.cityView(for: geometry.size)
-            }
-            
+          .onAppear {
+            UITableView.appearance().separatorStyle = .none
+          }
+          .onDisappear {
+            UITableView.appearance().separatorStyle = .singleLine
+          }
+
+          // bottom
+          VStack {
             Spacer()
             
-            NavigationLink(destination: WeatherView(weather: self.viewModel.weather)) {
-              self.trailingBottomView(for: geometry.size, icon: self.weatherIcon)
-                .foregroundColor(Color.white)
+            HStack(alignment: .bottom) {
+              NavigationLink(destination: CityDetailView(viewModel: self._viewModel)) {
+                self.cityView(for: geometry.size)
+              }
+              
+              Spacer()
+              
+              NavigationLink(destination: WeatherView(weather: self.viewModel.weather)) {
+                self.trailingBottomView(for: geometry.size, icon: self.weatherIcon)
+
+              }
+              
+              NavigationLink(destination: MoonView(daily: self.viewModel.weather?.daily)) {
+                HStack {
+                self.trailingBottomView(for: geometry.size, icon: self.moonIcon)
+                  // not show moon
+                }
+              }
             }
-            
-            NavigationLink(destination: MoonView(daily: self.viewModel.weather?.daily, moon: self.viewModel.moon)) {
-              self.trailingBottomView(for: geometry.size, icon: self.moonIcon)
-                .foregroundColor(Color.white)
-            }
+            .padding()
+            .shadow(color: Color.gray, radius: Style.shape.shadowRadius, y: 2)
           }
         }
         .navigationBarTitle(Text("Seeds"))
         .navigationBarItems(leading: self.leadingBarItem(),
                             trailing: self.trailingBarItem())
         .sheet(isPresented: self.$showFilterView) {
-          FilterView(seedFilter: self.$seedFilter, showFilterView: self.$showFilterView)
+          FilterView(seedFilter: self.$viewModel.seedFilter, showFilterView: self.$showFilterView)
         }
       }
       .onAppear {
@@ -101,7 +98,9 @@ struct HomeView: View {
       }
       .sheet(isPresented: self.$showSearchView) {
         // TODO, 合并FilterView的sheet
-        SearchView(selection: self.$viewModel.location, showSearchView: self.$showSearchView)
+        SearchView(selection: self.$viewModel.location,
+                   seedFilter: self.$viewModel.seedFilter,
+                   showSearchView: self.$showSearchView)
       }
 
     }
@@ -130,26 +129,32 @@ struct HomeView: View {
     return ZStack {
       Circle()
         .frame(width: radius, height: radius)
-        .foregroundColor(Color.blue)
+        .foregroundColor(Color.primary)
       
       VStack {
         OptionalText(viewModel.location.name?.capitalized)
-          .foregroundColor(Color.white)
+          .font(.headline)
+          .lineLimit(nil)
         
         OptionalText(viewModel.koppenZone?.descript)
-          .foregroundColor(Color.white)
+          .font(.footnote)
       }
+      .foregroundColor(Color.white)
     }
   }
   
-  private func trailingBottomView(for size: CGSize, icon: UIImage) -> some View {
+  private func trailingBottomView(for size: CGSize, icon: Image) -> some View {
     let radius = size.width / 6
     return ZStack {
       Circle()
         .frame(width: radius, height: radius)
-        .foregroundColor(Color.blue)
+        .foregroundColor(Color.primary)
       
-      Image(uiImage: icon)
+      icon
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .frame(width: radius * 0.5)
+      
     }
   }
 }
@@ -162,61 +167,83 @@ extension HomeView {
       GeometryReader { geometry in
         self.body(for: geometry.size)
       }
-      .aspectRatio(16/9, contentMode: .fill)
+      .aspectRatio(4/3, contentMode: .fill)
     }
     
     private func body(for size: CGSize) -> some View {
+      let imgWidth = size.width
+      let imgHeight = size.height
       
-      let infoWidth = size.width / 2.5
-      let infoHeight = infoWidth
+      let infoWidth = size.width / 2
+      let infoHeight = infoWidth * 3 / 4
+      
+      let offset = size.width * 1.0 / 4.0
       
       return ZStack {
         OptionalURLImage(url: self.seed.wiki?.thumbnail)
-          .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: size.width * 1.0 / 4.0))
+          .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: offset))
+          .scaledToFill()
+          .frame(width: imgWidth, height: imgHeight)
+          .clipped()
+          .shadow(color: Color.gray, radius: Style.shape.shadowRadius, y: 2)
+          .cornerRadius(Style.shape.cornerRadius)
+
         
         infoView
           .frame(width: infoWidth, height: infoHeight, alignment: .center)
-          .offset(CGSize(width: infoWidth / 2, height: 0))
+          .offset(CGSize(width: offset, height: 0))
       }
-      .background(Color.orange)
     }
     
     private var infoView: some View {
       ZStack {
-        RoundedRectangle(cornerRadius: 4)
-          .foregroundColor(Color.red)
+        RoundedRectangle(cornerRadius: Style.shape.cornerRadius)
+          .foregroundColor(Color.white)
+          .shadow(color: Color.gray, radius: Style.shape.shadowRadius, y: 2)
         
-        VStack {
+        VStack(alignment: .leading) {
           Text(seed.name)
+            .font(.headline)
           
-          rateView
+          Spacer()
+          
+          VStack(alignment: .leading, spacing: 4) {
+            OptionalText(seed.rateDisplay())
+              .font(.footnote)
+              .foregroundColor(Color.gray)
+            SeedRateView(rate: seed.rate)
+              .font(.subheadline)
+          }
+          
+          Spacer()
           
           HStack {
             planView
             Image(systemName: "chevron.right")
           }
         }
+        .padding(horizontal: Style.spacing.siblings, vertical: Style.spacing.superview)
       }
-    }
-    
-    private var rateView: some View {
-      if seed.rate != nil {
-        return Text("Rate: \(seed.rate!)")
-      }
-      
-      return Text("")
     }
     
     private var planView: some View {
-      HStack {
+      HStack(alignment: .bottom, spacing: 1) {
         if seed.maturity?.first != nil {
           Text("\(seed.maturity!.first!)")
+            .font(.subheadline)
+            .bold()
           
           Text("Days to Maturity")
+            .font(.footnote)
+            .foregroundColor(Color.gray)
         } else if seed.germination?.first != nil {
           Text("\(seed.germination!.first!)")
+            .font(.subheadline)
+            .bold()
           
           Text("Days to Germination")
+            .font(.footnote)
+            .foregroundColor(Color.gray)
         }
       }
       

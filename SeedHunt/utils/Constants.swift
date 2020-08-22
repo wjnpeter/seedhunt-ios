@@ -18,4 +18,6 @@ extension Constants {
   static let locName = "locName"
   static let locLat = "locLat"
   static let locLon = "locLon"
+  
+  static let favourites = "favourites"
 }

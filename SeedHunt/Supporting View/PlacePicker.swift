@@ -18,7 +18,6 @@ struct PlacePicker: UIViewRepresentable {
   func makeUIView(context: Self.Context) -> UISearchBar {
     let searchBar = UISearchBar()
     searchBar.delegate = context.coordinator
-    
     return searchBar
   }
   
@@ -47,6 +46,20 @@ struct PlacePicker: UIViewRepresentable {
       filter.country = "au"
       fetcher = GMSAutocompleteFetcher(filter: filter)
       fetcher!.delegate = self
+    }
+    
+    //UISearchBarDelegate
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+         searchBar.resignFirstResponder()
+         searchBar.setShowsCancelButton(false, animated: true)
+    }
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+         searchBar.setShowsCancelButton(true, animated: true)
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+         searchBar.resignFirstResponder()
+         searchBar.setShowsCancelButton(false, animated: true)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
