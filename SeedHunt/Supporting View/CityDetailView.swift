@@ -219,6 +219,7 @@ extension CityDetailView {
         HStack(alignment: .center) {
           OptionalImage(systemName: icon)
             .font(.system(size: 50))
+            
             .offset(x: 0, y: -Style.spacing.superview * 2.5)
           
           Text(title)

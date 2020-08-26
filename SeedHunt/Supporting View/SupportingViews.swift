@@ -41,7 +41,6 @@ struct OptionalImage: View {
           .resizable()
       } else if systemName != nil && !systemName!.isEmpty {
         Image(systemName: systemName!)
-          .resizable()
       } else if name != nil && !name!.isEmpty {
         Image(name!)
           .resizable()

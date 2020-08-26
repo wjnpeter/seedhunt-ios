@@ -45,3 +45,7 @@ extension View {
   }
   
 }
+
+extension Color {
+  
+}
