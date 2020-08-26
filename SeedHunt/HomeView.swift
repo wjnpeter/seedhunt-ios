@@ -28,8 +28,13 @@ struct HomeView: View {
   }
   
   private var moonIcon: Image {
-    Image(viewModel.weather?.daily?.first?.moonIcon ?? "")
+    guard let icon = viewModel.weather?.daily?.first?.moonIcon else {
+      return Image(uiImage: UIImage())
+    }
+    
+    return Image(icon)
       .renderingMode(.original)
+      
   }
   
   var body: some View {

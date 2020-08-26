@@ -12,7 +12,7 @@ import FirebaseFunctions
 class FirebaseClient {
   static private var functions: Functions = {
     let ret = Functions.functions()
-    ret.useFunctionsEmulator(origin: "http://localhost:5001")
+//    ret.useFunctionsEmulator(origin: "http://localhost:5001")
     return ret
   }()
   

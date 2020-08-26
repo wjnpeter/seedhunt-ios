@@ -48,6 +48,7 @@ struct MoonView: View {
         
       }
     }
+    .padding(.horizontal, Style.spacing.superview)
     .navigationBarTitle("Moon")
   }
   
@@ -84,6 +85,9 @@ struct MoonView: View {
           }
         }
       }
+    }
+    .onAppear {
+      UITableView.appearance().separatorStyle = .singleLine
     }
   }
 }

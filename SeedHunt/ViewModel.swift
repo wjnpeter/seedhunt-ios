@@ -52,11 +52,7 @@ class ViewModel: ObservableObject {
     return ret
   }
   
-  @Published private(set) var weather: Weather? {
-    didSet {
-      fetchMoon()
-    }
-  }
+  @Published private(set) var weather: Weather? 
   
   private var bomStns: [BOMProduct: BomStation] = [:]
   @Published private(set) var historicalWeathers: [BOMProduct: HistoricalWeather] = [:]
@@ -245,7 +241,10 @@ class ViewModel: ObservableObject {
       }
       .replaceError(with: nil)
       .receive(on: DispatchQueue.main)
-      .assign(to: \.weather, on: self)
+      .sink(receiveValue: { (weather: Weather?) in
+        self.weather = weather
+        self.fetchMoon()
+      })
       .store(in: &fetchCancellables)
   }
   

@@ -39,10 +39,12 @@ struct OptionalImage: View {
       if uiImage != nil {
         Image(uiImage: uiImage!)
           .resizable()
-      } else if systemName != nil {
+      } else if systemName != nil && !systemName!.isEmpty {
         Image(systemName: systemName!)
-      } else if name != nil {
+          .resizable()
+      } else if name != nil && !name!.isEmpty {
         Image(name!)
+          .resizable()
       }
     }
   }
@@ -56,9 +58,11 @@ struct OptionalURLImage: View {
   @State private var fetchCancellable = CancellableBag()
   
   var body: some View {
-    Image(uiImage: img ?? UIImage())
-      .resizable()
-      .aspectRatio(contentMode: .fit)
+    Group {
+      Image(uiImage: img ?? UIImage())
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+      }
       .onAppear {
         self.fetchImg()
       }

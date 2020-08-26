@@ -24,15 +24,15 @@ struct SeedRateView: View {
   
   var body: some View {
     HStack(spacing: 1) {
-      ForEach(0..<countFilled) { _ in
+      ForEach(0..<countFilled, id: \.self) { _ in
         self.imageView("circle.fill")
       }
       
-      ForEach(0..<countHalf) { _ in
+      ForEach(0..<countHalf, id: \.self) { _ in
         self.imageView("circle.lefthalf.fill")
       }
       
-      ForEach(0..<countEmpty) { _ in
+      ForEach(0..<countEmpty, id: \.self) { _ in
         self.imageView("circle")
       }
     }

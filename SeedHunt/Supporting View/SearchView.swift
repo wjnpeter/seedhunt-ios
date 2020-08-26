@@ -39,6 +39,9 @@ struct SearchView: View {
           
         ForEach(LocationHelper.popularSearches) { popularSearch in
           PopularSearchView(popularSearch: popularSearch)
+            .onTapGesture {
+              self.select(popularSearch.location)
+            }
         }
       }
       .padding()

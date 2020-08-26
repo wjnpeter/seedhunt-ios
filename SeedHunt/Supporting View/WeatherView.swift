@@ -37,6 +37,8 @@ struct WeatherView: View {
             }
             
             OptionalImage(systemName: ds.systemIcon)
+              .frame(maxWidth: 36, maxHeight: 36)
+              .aspectRatio(contentMode: .fit)
               .font(.body)
              
           }
