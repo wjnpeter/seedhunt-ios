@@ -25,21 +25,18 @@ struct SeedRateView: View {
   var body: some View {
     HStack(spacing: 1) {
       ForEach(0..<countFilled, id: \.self) { _ in
-        self.imageView("circle.fill")
+        Image(systemName: "circle.fill")
       }
       
       ForEach(0..<countHalf, id: \.self) { _ in
-        self.imageView("circle.lefthalf.fill")
+        Image(systemName: "circle.lefthalf.fill")
       }
       
       ForEach(0..<countEmpty, id: \.self) { _ in
-        self.imageView("circle")
+        Image(systemName: "circle")
       }
     }
-  }
-  
-  private func imageView(_ systemName: String) -> some View {
-    Image(systemName: systemName)
+    .foregroundColor(Color.secondary)
   }
 }
 

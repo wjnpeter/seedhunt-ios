@@ -57,12 +57,6 @@ struct HomeView: View {
               }
             }
           }
-          .onAppear {
-            UITableView.appearance().separatorStyle = .none
-          }
-          .onDisappear {
-            UITableView.appearance().separatorStyle = .singleLine
-          }
 
           // bottom
           VStack {
@@ -88,7 +82,6 @@ struct HomeView: View {
               }
             }
             .padding()
-            .shadow(color: Color.gray, radius: Style.shape.shadowRadius, y: 2)
           }
         }
         .navigationBarTitle(Text("Seeds"))
@@ -135,6 +128,7 @@ struct HomeView: View {
       Circle()
         .frame(width: radius, height: radius)
         .foregroundColor(Color.primary)
+        .shadow()
       
       VStack {
         OptionalText(viewModel.location.name?.capitalized)
@@ -144,7 +138,7 @@ struct HomeView: View {
         OptionalText(viewModel.koppenZone?.descript)
           .font(.footnote)
       }
-      .foregroundColor(Color.white)
+      .foregroundColor(Color.onPrimary)
     }
   }
   
@@ -154,11 +148,13 @@ struct HomeView: View {
       Circle()
         .frame(width: radius, height: radius)
         .foregroundColor(Color.primary)
+        .shadow()
       
       icon
         .resizable()
         .aspectRatio(contentMode: .fit)
         .frame(width: radius * 0.5)
+        .foregroundColor(Color.onPrimary)
       
     }
   }
@@ -190,7 +186,7 @@ extension HomeView {
           .scaledToFill()
           .frame(width: imgWidth, height: imgHeight)
           .clipped()
-          .shadow(color: Color.gray, radius: Style.shape.shadowRadius, y: 2)
+          .shadow()
           .cornerRadius(Style.shape.cornerRadius)
 
         
@@ -204,7 +200,7 @@ extension HomeView {
       ZStack {
         RoundedRectangle(cornerRadius: Style.shape.cornerRadius)
           .foregroundColor(Color.white)
-          .shadow(color: Color.gray, radius: Style.shape.shadowRadius, y: 2)
+          .shadow()
         
         VStack(alignment: .leading) {
           Text(seed.name)
@@ -215,7 +211,7 @@ extension HomeView {
           VStack(alignment: .leading, spacing: 4) {
             OptionalText(seed.rateDisplay())
               .font(.footnote)
-              .foregroundColor(Color.gray)
+              .foregroundColor(Color.secondaryLabel)
             SeedRateView(rate: seed.rate)
               .font(.subheadline)
           }
@@ -248,7 +244,7 @@ extension HomeView {
           
           Text("Days to Germination")
             .font(.footnote)
-            .foregroundColor(Color.gray)
+            .foregroundColor(Color.secondaryLabel)
         }
       }
       
@@ -257,3 +253,8 @@ extension HomeView {
   }
 }
 
+extension View {
+  func shadow() -> some View {
+    shadow(color: Color.gray, radius: Style.shape.shadowRadius, y: 2)
+  }
+}

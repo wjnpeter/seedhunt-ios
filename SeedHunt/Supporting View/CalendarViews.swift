@@ -82,7 +82,7 @@ struct CalendarViewWithRange: View {
             }
           
           Text(String(self.calendar.component(.day, from: dateCell!.dt)))
-            .underline(isSelected(dateCell!.dt), color: Color.orange)
+            .underline(isSelected(dateCell!.dt), color: Color.systemFill)
             .font(.footnote)
         }
       } else {
@@ -94,9 +94,9 @@ struct CalendarViewWithRange: View {
   private func backgroundView(for date: Date?) -> some View {
     Group {
       if isSelected(date) {
-        Circle().foregroundColor(Color.orange)
+        Circle().foregroundColor(Color.secondarySystemFill)
       } else if isToday(date) {
-        Circle().foregroundColor(Color.gray)
+        Circle().foregroundColor(Color.tertiarySystemFill)
       } else {
         Circle().aspectRatio(1, contentMode: .fit).foregroundColor(Color.clear)
       }

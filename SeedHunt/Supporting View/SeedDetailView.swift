@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import MessageUI
 
 struct SeedDetailView: View {
   @Binding var selectedSeed: Seed?
@@ -14,6 +15,7 @@ struct SeedDetailView: View {
   
   @State private var showShareSheet: Bool = false
   @State private var isFavourite: Bool
+  @State var showMailSheet = false
   
   init(selectedSeed: Binding<Seed?>, tempZone: Zone?) {
     _selectedSeed = selectedSeed
@@ -41,11 +43,18 @@ struct SeedDetailView: View {
           OptionalText(selectedSeed?.wiki?.description)
         }
         
-        Button(action: {}) {
-          HStack {
-            Text("Report an Issue")
-            Spacer()
-            Image(systemName: "exclamationmark.bubble")
+        if MFMailComposeViewController.canSendMail() {
+          Button(action: {
+            self.showMailSheet = true
+          }) {
+            HStack {
+              Text("Report an Issue")
+              Spacer()
+              Image(systemName: "exclamationmark.bubble")
+            }
+          }
+          .sheet(isPresented: $showMailSheet) {
+            MailView()
           }
         }
       }
@@ -106,7 +115,7 @@ extension SeedDetailView {
       .padding(Style.spacing.superview)
     }
     .frame(maxWidth: .infinity)
-    .background(Color(UIColor.systemGroupedBackground))
+    .background(Color.systemGroupedBackground)
     .cornerRadius(Style.shape.cornerRadius)
     
   }

@@ -29,7 +29,7 @@ class ViewModel: ObservableObject {
     }
   }
   @Published private(set) var koppenZone: Zone?
-
+  
   @Published private var seeds: [Seed]?
   @Published var seedFilter = SeedFilter()
   var filterSeeds: [Seed] {
@@ -131,15 +131,15 @@ class ViewModel: ObservableObject {
       .map{ data, _ in
         let jsonObject = try? JSONSerialization.jsonObject(with: data)
         guard let json = jsonObject as? [String: Any] else { return [:] }
-
+        
         return json
-      }
-      .replaceError(with: [:])
-      .receive(on: DispatchQueue.main)
-      .sink { json in
-        self.agriculture.merge(from: json)
-      }
-      .store(in: &fetchCancellables)
+    }
+    .replaceError(with: [:])
+    .receive(on: DispatchQueue.main)
+    .sink { json in
+      self.agriculture.merge(from: json)
+    }
+    .store(in: &fetchCancellables)
   }
   
   private func fetchHistoricalWeather(product: BOMProduct) {
@@ -154,13 +154,13 @@ class ViewModel: ObservableObject {
       .map{ data, _ in
         let jsonObject = try? JSONSerialization.jsonObject(with: data)
         guard let json = jsonObject as? [String: Any] else { return nil }
-
+        
         return HistoricalWeather(json: json)
-      }
-      .replaceError(with: nil)
-      .receive(on: DispatchQueue.main)
-      .assign(to: \.historicalWeathers[product], on: self)
-      .store(in: &fetchCancellables)
+    }
+    .replaceError(with: nil)
+    .receive(on: DispatchQueue.main)
+    .assign(to: \.historicalWeathers[product], on: self)
+    .store(in: &fetchCancellables)
     
   }
   
@@ -175,17 +175,17 @@ class ViewModel: ObservableObject {
       .map{ (data, _) -> BomStation? in
         let jsonObject = try? JSONSerialization.jsonObject(with: data)
         guard let json = jsonObject as? [String: Any] else { return nil }
-
+        
         return BomStation(json: json)
-      }
-      .replaceError(with: nil)
-      .receive(on: DispatchQueue.main)
-      .sink { bomStn in
-        self.bomStns[product] = bomStn
-
-        completion(bomStn)
-      }
-      .store(in: &fetchCancellables)
+    }
+    .replaceError(with: nil)
+    .receive(on: DispatchQueue.main)
+    .sink { bomStn in
+      self.bomStns[product] = bomStn
+      
+      completion(bomStn)
+    }
+    .store(in: &fetchCancellables)
     
   }
   
@@ -213,18 +213,18 @@ class ViewModel: ObservableObject {
       .map { data, _ in
         let jsonObject = try? JSONSerialization.jsonObject(with: data) 
         return jsonObject as? [String]
-      }
-      .replaceError(with: nil)
-      .receive(on: DispatchQueue.main)
-      .sink { (moves: [String]?) in
-        if let moves = moves {
-          for (idx, move) in moves.enumerated() {
-            self.weather!.daily![idx].moonMove = move
-          }
+    }
+    .replaceError(with: nil)
+    .receive(on: DispatchQueue.main)
+    .sink { (moves: [String]?) in
+      if let moves = moves {
+        for (idx, move) in moves.enumerated() {
+          self.weather!.daily![idx].moonMove = move
         }
       }
-      .store(in: &fetchCancellables)
-      
+    }
+    .store(in: &fetchCancellables)
+    
   }
   
   private func fetchWeather() {
@@ -236,15 +236,15 @@ class ViewModel: ObservableObject {
       .map { data, _ in
         let jsonObject = try? JSONSerialization.jsonObject(with: data)
         guard let json = jsonObject as? [String: Any] else { return nil }
-
+        
         return Weather(json: json)
-      }
-      .replaceError(with: nil)
-      .receive(on: DispatchQueue.main)
-      .sink(receiveValue: { (weather: Weather?) in
-        self.weather = weather
-        self.fetchMoon()
-      })
+    }
+    .replaceError(with: nil)
+    .receive(on: DispatchQueue.main)
+    .sink(receiveValue: { (weather: Weather?) in
+      self.weather = weather
+      self.fetchMoon()
+    })
       .store(in: &fetchCancellables)
   }
   
@@ -259,13 +259,13 @@ class ViewModel: ObservableObject {
       .map { data, _ in
         let jsonObject = try? JSONSerialization.jsonObject(with: data)
         guard let json = jsonObject as? [String: Any] else { return nil }
-
+        
         return Zone(json: json)
-      }
-      .replaceError(with: nil)
-      .receive(on: DispatchQueue.main)
-      .assign(to: about == "koppenmajor" ? \.koppenZone : \.tempZone, on: self)
-      .store(in: &fetchCancellables)
+    }
+    .replaceError(with: nil)
+    .receive(on: DispatchQueue.main)
+    .assign(to: about == "koppenmajor" ? \.koppenZone : \.tempZone, on: self)
+    .store(in: &fetchCancellables)
   }
   
   private func fetchSeeds(tempZone: Int, month: Int? = nil, page: Int? = nil) {
@@ -283,8 +283,8 @@ class ViewModel: ObservableObject {
         let json = jsonObject as? [String: Any]
         
         // TODO
-//        let pageCount = json?["pageCount"] as? Int
-//        let plantTotal = json?["plantTotal"] as? Int
+        //        let pageCount = json?["pageCount"] as? Int
+        //        let plantTotal = json?["plantTotal"] as? Int
         guard let jsons = json?["data"] as? [[String: Any]] else { return nil }
         
         return jsons.compactMap { Seed(json: $0) }
@@ -314,4 +314,24 @@ struct SeedFilter {
   var month: Int? // from 0
   var category: Seed.Category?
   var favouriteOnly = false
+}
+
+// with Cloud Function
+extension ViewModel {
+  private func fetchWeather2() {
+    FirebaseClient.call(fn: "darksky", data: ["geo": location.latLon()]) { (result, error) in
+      print(error ?? "success - darksky")
+      guard let data = result?.data as? Data else { return }
+      
+      let jsonObject = try? JSONSerialization.jsonObject(with: data)
+      guard let json = jsonObject as? [String: Any],
+        let object = Weather(json: json) else { return }
+      
+      DispatchQueue.main.async {
+        self.weather = object
+      }
+      
+      self.fetchMoon()
+    }
+  }
 }

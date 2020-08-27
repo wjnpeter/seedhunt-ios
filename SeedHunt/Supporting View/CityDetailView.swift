@@ -15,7 +15,7 @@ struct CityDetailView: View {
   @State private var customTitle: Bool
   
   private var title: String {
-    viewModel.location.name ?? ""
+    viewModel.location.name?.capitalized ?? ""
   }
   
   init(viewModel: ObservedObject<ViewModel>) {
@@ -34,7 +34,7 @@ struct CityDetailView: View {
           if self.customTitle {
             OptionalText(self.title)
               .padding(Style.spacing.superview)
-              .foregroundColor(Color(UIColor.lightText))
+              .foregroundColor(Color.white)
               .font(Font.largeTitle.bold())
           }
         }
@@ -214,13 +214,14 @@ extension CityDetailView {
       ZStack {
         
         RoundedRectangle(cornerRadius: Style.shape.cornerRadius)
-          .foregroundColor(Color(UIColor.systemGroupedBackground))
+          .background(LinearGradient(gradient: Gradient(colors: [Color.primary, Color.tertiary]), startPoint: .top, endPoint: .bottom))
+          .foregroundColor(Color.clear)
         
         HStack(alignment: .center) {
           OptionalImage(systemName: icon)
             .font(.system(size: 50))
-            
             .offset(x: 0, y: -Style.spacing.superview * 2.5)
+            .foregroundColor(Color.secondary)
           
           Text(title)
             .font(.body)
@@ -237,9 +238,11 @@ extension CityDetailView {
             
             OptionalText(numberDesc)
               .font(Font.footnote)
+              .foregroundColor(Color.onSecondary)
           }
         }
         .padding(horizontal: Style.spacing.siblings, vertical: Style.spacing.superview)
+        .foregroundColor(Color.onPrimary)
       }
       .padding(.top, icon != nil ? Style.spacing.superview * 2 : 0)
       

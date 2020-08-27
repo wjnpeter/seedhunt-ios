@@ -22,7 +22,7 @@ struct WeatherView: View {
               
               OptionalText(ds.summary)
                 .font(.subheadline)
-                .foregroundColor(Color(UIColor.secondaryLabel))
+                .foregroundColor(Color.secondaryLabel)
             }
             
             Spacer(minLength: Style.spacing.siblings)
@@ -33,11 +33,12 @@ struct WeatherView: View {
             
             if ds.apparentTemperatureHigh != nil {
               OptionalText("| \(Int(ds.apparentTemperatureLow!))")
-                .foregroundColor(Color(UIColor.secondaryLabel))
+                .foregroundColor(Color.secondaryLabel)
             }
             
             OptionalImage(systemName: ds.systemIcon)
               .font(.body)
+              .foregroundColor(Color.primary)
              
           }
           .padding(.top, Style.spacing.superview)
@@ -46,7 +47,6 @@ struct WeatherView: View {
     }
     .navigationBarTitle("Weather")
     .font(.body)
-    .foregroundColor(Color(UIColor.label))
 
   }
   

@@ -76,12 +76,27 @@ struct SearchView: View {
     
   }
   
+  private func parsePrediction(_ text: NSAttributedString) -> NSAttributedString {
+    let regularFont = UIFont.systemFont(ofSize: UIFont.labelFontSize)
+    let boldFont = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
+    
+    let bolded = text.mutableCopy() as? NSMutableAttributedString
+    bolded?.enumerateAttribute(.gmsAutocompleteMatchAttribute,
+                               in: NSMakeRange(0, bolded!.length),
+                               options: NSAttributedString.EnumerationOptions(),
+                               using: { (value, range, stop) in
+                                let font = value == nil ? regularFont : boldFont
+                                bolded?.addAttribute(.font, value: font, range: range)
+    })
+    return bolded ?? text
+  }
+  
   private func searchLocView(for item: GMSAutocompletePrediction) -> some View {
     // TODO support attributed text
     Group {
       HStack {
         Image(systemName: "magnifyingglass")
-        Label(item.attributedFullText)
+        Label(parsePrediction(item.attributedFullText))
       }
       Divider()
     }
@@ -143,11 +158,10 @@ extension SearchView {
         VStack(alignment: .leading) {
           Text("\(category.capitalized) in \(city.capitalized)")
             .font(.headline)
-            .foregroundColor(Color(UIColor.label))
           
           Text("\(viewModel.filterSeeds.count) Plants")
             .font(.body)
-            .foregroundColor(Color(UIColor.secondaryLabel))
+            .foregroundColor(Color.secondaryLabel)
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)

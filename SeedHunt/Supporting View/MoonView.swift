@@ -41,11 +41,9 @@ struct MoonView: View {
           }
         }
         CalendarViewWithRange(start: selectedDate!, length: daily!.count, icons: moonIcons, selection: $selectedDate)
-        
-        Divider()
+
         caption("Suggestions")
         moonActionsView
-        
       }
     }
     .padding(.horizontal, Style.spacing.superview)
@@ -85,9 +83,6 @@ struct MoonView: View {
           }
         }
       }
-    }
-    .onAppear {
-      UITableView.appearance().separatorStyle = .singleLine
     }
   }
 }

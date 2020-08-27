@@ -33,6 +33,7 @@
 		BAAD2D4F24887DF600ECCC7A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BAAD2D4E24887DF600ECCC7A /* Assets.xcassets */; };
 		BAAD2D5224887DF600ECCC7A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BAAD2D5124887DF600ECCC7A /* Preview Assets.xcassets */; };
 		BAAD2D5524887DF600ECCC7A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAAD2D5324887DF600ECCC7A /* LaunchScreen.storyboard */; };
+		BABDC9F424F74F1E00199B40 /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BABDC9F324F74F1D00199B40 /* MailView.swift */; };
 		BAF4795D24E2078B00675F6E /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF4795C24E2078B00675F6E /* Weather.swift */; };
 		BAF4795F24E2080B00675F6E /* Agriculture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF4795E24E2080B00675F6E /* Agriculture.swift */; };
 		BAF4796124E2087100675F6E /* Zone.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF4796024E2087100675F6E /* Zone.swift */; };
@@ -73,6 +74,7 @@
 		BAAD2D5124887DF600ECCC7A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BAAD2D5424887DF600ECCC7A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BAAD2D5624887DF600ECCC7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BABDC9F324F74F1D00199B40 /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
 		BAF4795C24E2078B00675F6E /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		BAF4795E24E2080B00675F6E /* Agriculture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Agriculture.swift; sourceTree = "<group>"; };
 		BAF4796024E2087100675F6E /* Zone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zone.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				BA041B4624F089510003F0D8 /* Label.swift */,
 				BA041B3E24ECEB360003F0D8 /* LoadingView.swift */,
 				BA29CEB924E5000B0085B466 /* SeedDetailView.swift */,
+				BABDC9F324F74F1D00199B40 /* MailView.swift */,
 				BA041B4224EE32230003F0D8 /* SeedRateView.swift */,
 				BA29CEBD24E544340085B466 /* CityDetailView.swift */,
 				BA29CEC324E6AC650085B466 /* WeatherView.swift */,
@@ -359,6 +362,7 @@
 				BA29CECC24E803EC0085B466 /* SearchView.swift in Sources */,
 				BA041B4724F089520003F0D8 /* Label.swift in Sources */,
 				BA041B3F24ECEB360003F0D8 /* LoadingView.swift in Sources */,
+				BABDC9F424F74F1E00199B40 /* MailView.swift in Sources */,
 				BAAD2D4B24887DF100ECCC7A /* SceneDelegate.swift in Sources */,
 				BAAD2D4D24887DF100ECCC7A /* HomeView.swift in Sources */,
 				BAF4797224E356B600675F6E /* ViewModel.swift in Sources */,

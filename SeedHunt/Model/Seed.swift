@@ -72,7 +72,7 @@ struct Seed: Hashable, Equatable {
     
     guard let range = ClosedRange(array: zoneMonths) else { return nil }
     
-    let symbols = Calendar.current.monthSymbols
+    let symbols = Calendar.current.shortMonthSymbols
     guard range.lowerBound <= symbols.count,
       range.upperBound <= symbols.count else { return nil }
     
