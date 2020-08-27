@@ -66,6 +66,7 @@
 		BA29CECD24E900280085B466 /* PlacePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlacePicker.swift; sourceTree = "<group>"; };
 		BA29CED324EA5EEA0085B466 /* PropertyWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
 		BA29CED524EB538F0085B466 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
+		BA3AEEE124F7E00300BFE13B /* SeedHunt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SeedHunt.entitlements; sourceTree = "<group>"; };
 		BAAD2D4524887DF100ECCC7A /* SeedHunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeedHunt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAAD2D4824887DF100ECCC7A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BAAD2D4A24887DF100ECCC7A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -161,6 +162,7 @@
 		BAAD2D4724887DF100ECCC7A /* SeedHunt */ = {
 			isa = PBXGroup;
 			children = (
+				BA3AEEE124F7E00300BFE13B /* SeedHunt.entitlements */,
 				BAF4796E24E2385D00675F6E /* utils */,
 				BAF4795B24E2075300675F6E /* Model */,
 				BA2BC82B2488914200CBF44F /* Supporting View */,
@@ -523,6 +525,8 @@
 			baseConfigurationReference = CD1BBD66A568222980EBA696 /* Pods-SeedHunt.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SeedHunt/SeedHunt.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"SeedHunt/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RBZ8YW9GE;
@@ -532,8 +536,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.weijieli.SeedHunt;
+				PRODUCT_BUNDLE_IDENTIFIER = com.weijieli.seedhunt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -544,6 +550,8 @@
 			baseConfigurationReference = EEA38AC80780417E5E16F006 /* Pods-SeedHunt.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SeedHunt/SeedHunt.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"SeedHunt/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RBZ8YW9GE;
@@ -553,8 +561,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.weijieli.SeedHunt;
+				PRODUCT_BUNDLE_IDENTIFIER = com.weijieli.seedhunt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

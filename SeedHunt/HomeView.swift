@@ -123,7 +123,12 @@ struct HomeView: View {
   }
   
   private func cityView(for size: CGSize) -> some View {
-    let radius = size.width / 4
+    let title = viewModel.location.name?.capitalized
+    var radius = size.width / 4
+    if title != nil, title!.split(separator: " ").count > 1 {
+      radius = size.width / 3
+    }
+    
     return ZStack {
       Circle()
         .frame(width: radius, height: radius)
@@ -131,10 +136,11 @@ struct HomeView: View {
         .shadow()
       
       VStack {
-        OptionalText(viewModel.location.name?.capitalized)
+        OptionalText(title)
+          .frame(maxWidth: radius)
+          .lineLimit(3)
           .font(.headline)
-          .lineLimit(nil)
-        
+          
         OptionalText(viewModel.koppenZone?.descript)
           .font(.footnote)
       }

@@ -45,7 +45,7 @@ struct WeatherView: View {
         }
       }
     }
-    .navigationBarTitle("Weather")
+    .navigationBarTitle("Forecast")
     .font(.body)
 
   }

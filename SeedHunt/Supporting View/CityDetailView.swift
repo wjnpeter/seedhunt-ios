@@ -12,7 +12,6 @@ struct CityDetailView: View {
   @ObservedObject var viewModel: ViewModel
   
   @State private var selectedTag = 0
-  @State private var customTitle: Bool
   
   private var title: String {
     viewModel.location.name?.capitalized ?? ""
@@ -21,7 +20,6 @@ struct CityDetailView: View {
   init(viewModel: ObservedObject<ViewModel>) {
     self._viewModel = viewModel
     
-    _customTitle = State(initialValue: viewModel.wrappedValue.location.photo != nil)
   }
   
   var body: some View {
@@ -31,12 +29,11 @@ struct CityDetailView: View {
           OptionalImage(uiImage: self.viewModel.location.photo)
             .frame(width: geometry.size.width, height: geometry.size.width * 9 / 16, alignment: .center)
           
-          if self.customTitle {
-            OptionalText(self.title)
-              .padding(Style.spacing.superview)
-              .foregroundColor(Color.white)
-              .font(Font.largeTitle.bold())
-          }
+          OptionalText(self.title)
+            .padding(Style.spacing.superview)
+            .foregroundColor(self.viewModel.location.photo != nil ? Color.white : Color.black)
+            .font(Font.largeTitle.bold())
+          
         }
         
         Picker(selection: self.$selectedTag, label: EmptyView()) {
@@ -61,9 +58,8 @@ struct CityDetailView: View {
         }
         
       }
-      .navigationBarTitle(Text(self.customTitle ? "" : self.title),
-                          displayMode: self.customTitle ? .inline : .automatic)
-      .navigationBarHidden(self.customTitle)
+      .navigationBarTitle("Stats", displayMode: .inline)
+      .navigationBarHidden(true)
     }
   }
   

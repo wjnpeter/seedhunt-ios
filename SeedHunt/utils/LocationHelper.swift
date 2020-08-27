@@ -119,7 +119,7 @@ extension LocationHelper {
     if let locName =  UserDefaults.standard.string(forKey: Constants.locName) {
       let locLat =  UserDefaults.standard.double(forKey: Constants.locLat)
       let locLon =  UserDefaults.standard.double(forKey: Constants.locLon)
-      return Location.make(with: CLLocationCoordinate2DMake(locLat, locLon), name: locName)
+      return Location.make(with: CLLocationCoordinate2DMake(locLat, locLon), name: locName, photo: UIImage(named: locName))
     } else {
       return LocationHelper.sydney
     }
@@ -145,13 +145,12 @@ extension LocationHelper {
      LocationHelper.brisbane, LocationHelper.adelaide, LocationHelper.perth]
   }
   
-  // TODO add default image 好看的
-  static let hobart = Location.make(with: CLLocationCoordinate2DMake(-42.8821, 147.3272), name: "hobart", photo: nil)
-  static let melbourne = Location.make(with: CLLocationCoordinate2DMake(-37.8136, 144.9631), name: "melbourne")
-  static let sydney = Location.make(with: CLLocationCoordinate2DMake(-33.8688, 151.2093), name: "sydney")
-  static let brisbane = Location.make(with: CLLocationCoordinate2DMake(-27.470125, 153.021072), name: "brisbane")
-  static let adelaide = Location.make(with: CLLocationCoordinate2DMake(-34.9285, 138.6007), name: "adelaide")
-  static let perth = Location.make(with: CLLocationCoordinate2DMake(-31.9505, 115.8605), name: "perth")
+  static let hobart = Location.make(with: CLLocationCoordinate2DMake(-42.8821, 147.3272), name: "hobart", photo: UIImage(named: "hobart"))
+  static let melbourne = Location.make(with: CLLocationCoordinate2DMake(-37.8136, 144.9631), name: "melbourne", photo: UIImage(named: "melbourne"))
+  static let sydney = Location.make(with: CLLocationCoordinate2DMake(-33.8688, 151.2093), name: "sydney", photo: UIImage(named: "sydney"))
+  static let brisbane = Location.make(with: CLLocationCoordinate2DMake(-27.470125, 153.021072), name: "brisbane", photo: UIImage(named: "brisbane"))
+  static let adelaide = Location.make(with: CLLocationCoordinate2DMake(-34.9285, 138.6007), name: "adelaide", photo: UIImage(named: "adelaide"))
+  static let perth = Location.make(with: CLLocationCoordinate2DMake(-31.9505, 115.8605), name: "perth", photo: UIImage(named: "perth"))
   
 }
 
