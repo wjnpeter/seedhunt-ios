@@ -27,6 +27,7 @@
 		BA29CECE24E900280085B466 /* PlacePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29CECD24E900280085B466 /* PlacePicker.swift */; };
 		BA29CED424EA5EEA0085B466 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29CED324EA5EEA0085B466 /* PropertyWrappers.swift */; };
 		BA29CED624EB53900085B466 /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA29CED524EB538F0085B466 /* LocationHelper.swift */; };
+		BA3AEEE324FB12FF00BFE13B /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3AEEE224FB12FE00BFE13B /* SafariView.swift */; };
 		BAAD2D4924887DF100ECCC7A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAD2D4824887DF100ECCC7A /* AppDelegate.swift */; };
 		BAAD2D4B24887DF100ECCC7A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAD2D4A24887DF100ECCC7A /* SceneDelegate.swift */; };
 		BAAD2D4D24887DF100ECCC7A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAD2D4C24887DF100ECCC7A /* HomeView.swift */; };
@@ -67,6 +68,7 @@
 		BA29CED324EA5EEA0085B466 /* PropertyWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
 		BA29CED524EB538F0085B466 /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
 		BA3AEEE124F7E00300BFE13B /* SeedHunt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SeedHunt.entitlements; sourceTree = "<group>"; };
+		BA3AEEE224FB12FE00BFE13B /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		BAAD2D4524887DF100ECCC7A /* SeedHunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeedHunt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAAD2D4824887DF100ECCC7A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BAAD2D4A24887DF100ECCC7A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				BA041B3E24ECEB360003F0D8 /* LoadingView.swift */,
 				BA29CEB924E5000B0085B466 /* SeedDetailView.swift */,
 				BABDC9F324F74F1D00199B40 /* MailView.swift */,
+				BA3AEEE224FB12FE00BFE13B /* SafariView.swift */,
 				BA041B4224EE32230003F0D8 /* SeedRateView.swift */,
 				BA29CEBD24E544340085B466 /* CityDetailView.swift */,
 				BA29CEC324E6AC650085B466 /* WeatherView.swift */,
@@ -358,6 +361,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BAF4797424E359A700675F6E /* BOMFetcher.swift in Sources */,
+				BA3AEEE324FB12FF00BFE13B /* SafariView.swift in Sources */,
 				BAAD2D4924887DF100ECCC7A /* AppDelegate.swift in Sources */,
 				BA041B4524EE3B4B0003F0D8 /* ShareSheet.swift in Sources */,
 				BA29CEBC24E5259B0085B466 /* SupportingViews.swift in Sources */,
@@ -528,6 +532,7 @@
 				CODE_SIGN_ENTITLEMENTS = SeedHunt/SeedHunt.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"SeedHunt/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RBZ8YW9GE;
 				ENABLE_PREVIEWS = YES;
@@ -541,7 +546,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -553,6 +558,7 @@
 				CODE_SIGN_ENTITLEMENTS = SeedHunt/SeedHunt.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"SeedHunt/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RBZ8YW9GE;
 				ENABLE_PREVIEWS = YES;
@@ -566,7 +572,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

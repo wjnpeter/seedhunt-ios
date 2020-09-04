@@ -12,6 +12,7 @@ struct CityDetailView: View {
   @ObservedObject var viewModel: ViewModel
   
   @State private var selectedTag = 0
+  @State private var showBOMLink = false
   
   private var title: String {
     viewModel.location.name?.capitalized ?? ""
@@ -59,12 +60,19 @@ struct CityDetailView: View {
         
       }
       .navigationBarTitle("Stats", displayMode: .inline)
-      .navigationBarHidden(true)
     }
   }
   
   private var subheadline: some View {
     Group {
+      Text("Source from BOM Weather")
+        .onTapGesture {
+          self.showBOMLink = true
+        }
+        .sheet(isPresented: $showBOMLink) {
+          SafariView(url: URL(string: "http://www.bom.gov.au")!)
+        }
+      
       if self.selectedTag == 0 { Text("Historical Weather") }
       else if self.selectedTag == 1 { Text("Updated \(updatedTime)") }
       else if self.selectedTag == 2 { Text("Updated \(updatedTime)") }

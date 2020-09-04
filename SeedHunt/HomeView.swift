@@ -91,6 +91,7 @@ struct HomeView: View {
           FilterView(seedFilter: self.$viewModel.seedFilter, showFilterView: self.$showFilterView)
         }
       }
+    .navigationViewStyle(StackNavigationViewStyle())
       .onAppear {
         self.viewModel.refetch()
       }
@@ -226,6 +227,7 @@ extension HomeView {
           
           HStack {
             planView
+            Spacer()
             Image(systemName: "chevron.right")
           }
         }

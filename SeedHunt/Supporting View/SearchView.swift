@@ -92,7 +92,6 @@ struct SearchView: View {
   }
   
   private func searchLocView(for item: GMSAutocompletePrediction) -> some View {
-    // TODO support attributed text
     Group {
       HStack {
         Image(systemName: "magnifyingglass")
